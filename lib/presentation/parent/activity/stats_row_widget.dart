@@ -22,57 +22,80 @@ class StatsRowWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = ResponsiveHelper.of(context);
-    final hours = child.screenTime ~/ 3600;
-    final minutes = (child.screenTime % 3600) ~/ 60;
 
-    return FutureBuilder<Map<String, dynamic>>(
-      future: _calculateWeeklyStats(parentUid, child.id),
-      builder: (context, snapshot) {
-        String avgValue = '--';
-        String peakValue = '--';
+    // Today's date string
+    final now = DateTime.now();
+    final todayStr =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
-        if (snapshot.hasData) {
-          final data = snapshot.data!;
-          final avgSeconds = data['averageSeconds'] as int? ?? 0;
-          final avgH = avgSeconds ~/ 3600;
-          final avgM = (avgSeconds % 3600) ~/ 60;
-          avgValue = '${avgH}h ${avgM}m';
-          peakValue = data['peakTime'] as String? ?? '--';
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(parentUid)
+          .collection('children')
+          .doc(child.id)
+          .collection('daily_stats')
+          .doc(todayStr)
+          .snapshots(),
+      builder: (context, todaySnapshot) {
+        int todayScreenTime = 0;
+        if (todaySnapshot.hasData && todaySnapshot.data!.exists) {
+          final data = todaySnapshot.data!.data() as Map<String, dynamic>?;
+          todayScreenTime = data?['screenTime'] ?? 0;
         }
+        final hours = todayScreenTime ~/ 3600;
+        final minutes = (todayScreenTime % 3600) ~/ 60;
 
-        return Row(
-          children: [
-            Expanded(
-              child: _buildStatCard(
-                r,
-                icon: Icons.access_time_rounded,
-                label: 'Today',
-                value: '${hours}h ${minutes}m',
-                color: _primaryGreen,
-                isPrimary: true,
-              ),
-            ),
-            SizedBox(width: r.wp(10)),
-            Expanded(
-              child: _buildStatCard(
-                r,
-                icon: Icons.trending_up_rounded,
-                label: 'Average',
-                value: avgValue,
-                color: _accentGreen,
-              ),
-            ),
-            SizedBox(width: r.wp(10)),
-            Expanded(
-              child: _buildStatCard(
-                r,
-                icon: Icons.schedule_rounded,
-                label: 'Peak',
-                value: peakValue,
-                color: const Color(0xFFF59E0B),
-              ),
-            ),
-          ],
+        return FutureBuilder<Map<String, dynamic>>(
+          future: _calculateWeeklyStats(parentUid, child.id),
+          builder: (context, snapshot) {
+            String avgValue = '--';
+            String peakValue = '--';
+
+            if (snapshot.hasData) {
+              final data = snapshot.data!;
+              final avgSeconds = data['averageSeconds'] as int? ?? 0;
+              final avgH = avgSeconds ~/ 3600;
+              final avgM = (avgSeconds % 3600) ~/ 60;
+              avgValue = '${avgH}h ${avgM}m';
+              peakValue = data['peakTime'] as String? ?? '--';
+            }
+
+            return Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    r,
+                    icon: Icons.access_time_rounded,
+                    label: 'Today',
+                    value: '${hours}h ${minutes}m',
+                    color: _primaryGreen,
+                    isPrimary: true,
+                  ),
+                ),
+                SizedBox(width: r.wp(10)),
+                Expanded(
+                  child: _buildStatCard(
+                    r,
+                    icon: Icons.trending_up_rounded,
+                    label: 'Average',
+                    value: avgValue,
+                    color: _accentGreen,
+                  ),
+                ),
+                SizedBox(width: r.wp(10)),
+                Expanded(
+                  child: _buildStatCard(
+                    r,
+                    icon: Icons.schedule_rounded,
+                    label: 'Peak',
+                    value: peakValue,
+                    color: const Color(0xFFF59E0B),
+                  ),
+                ),
+              ],
+            );
+          },
         );
       },
     );

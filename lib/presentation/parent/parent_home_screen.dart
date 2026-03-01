@@ -157,16 +157,19 @@ class _ParentHomeScreenState extends State<ParentHomeScreen>
             ? children[_selectedChildIndex!]
             : null;
 
-        int totalSeconds = 0;
         bool anyChildLocked = false;
         ChildModel? lockedChild;
         for (var child in children) {
-          totalSeconds += child.screenTime;
           if (child.isLocked) {
             anyChildLocked = true;
             lockedChild = child;
           }
         }
+
+        // Today's date string for daily_stats query
+        final now = DateTime.now();
+        final todayStr =
+            '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
         return Scaffold(
           backgroundColor: colorScheme.background,
@@ -216,14 +219,44 @@ class _ParentHomeScreenState extends State<ParentHomeScreen>
                         selectedChildIndex: _selectedChildIndex,
                         onChildSelected: (index) =>
                             setState(() => _selectedChildIndex = index),
+                        parentUid: user.uid,
+                        todayStr: todayStr,
                       ),
                       SizedBox(height: r.hp(28)),
                     ],
-                    StatsCardWidget(
-                      selectedChild: selectedChild,
-                      totalSeconds: totalSeconds,
-                      colorScheme: colorScheme,
-                    ),
+                    // Stats card — read today's screenTime from daily_stats
+                    if (selectedChild != null)
+                      StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(user.uid)
+                            .collection('children')
+                            .doc(selectedChild.id)
+                            .collection('daily_stats')
+                            .doc(todayStr)
+                            .snapshots(),
+                        builder: (context, statsSnapshot) {
+                          int todaySeconds = 0;
+                          if (statsSnapshot.hasData &&
+                              statsSnapshot.data!.exists) {
+                            final data =
+                                statsSnapshot.data!.data()
+                                    as Map<String, dynamic>?;
+                            todaySeconds = data?['screenTime'] ?? 0;
+                          }
+                          return StatsCardWidget(
+                            selectedChild: selectedChild,
+                            totalSeconds: todaySeconds,
+                            colorScheme: colorScheme,
+                          );
+                        },
+                      ),
+                    if (selectedChild == null)
+                      StatsCardWidget(
+                        selectedChild: null,
+                        totalSeconds: 0,
+                        colorScheme: colorScheme,
+                      ),
                     SizedBox(height: r.hp(28)),
                     DeviceStatusWidget(
                       child: selectedChild,

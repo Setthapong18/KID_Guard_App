@@ -299,11 +299,11 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     final r = ResponsiveHelper.of(context);
 
     return Scaffold(
       backgroundColor: _bgColor,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: r.wp(28)),
@@ -442,40 +442,44 @@ class _LoginScreenState extends State<LoginScreen>
 
                   SizedBox(height: r.hp(32)),
 
-                  // Submit Button
-                  if (authProvider.isLoading)
-                    Center(
-                      child: Container(
-                        width: r.wp(52),
-                        height: r.hp(52),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(r.radius(16)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.06),
-                              blurRadius: 16,
-                              offset: const Offset(0, 4),
+                  // Submit Button — only this part needs AuthProvider
+                  Consumer<AuthProvider>(
+                    builder: (context, authProvider, _) {
+                      if (authProvider.isLoading) {
+                        return Center(
+                          child: Container(
+                            width: r.wp(52),
+                            height: r.hp(52),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(r.radius(16)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.06),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        child: Center(
-                          child: SizedBox(
-                            width: r.wp(24),
-                            height: r.hp(24),
-                            child: const CircularProgressIndicator(
-                              color: _primaryColor,
-                              strokeWidth: 2.5,
+                            child: Center(
+                              child: SizedBox(
+                                width: r.wp(24),
+                                height: r.hp(24),
+                                child: const CircularProgressIndicator(
+                                  color: _primaryColor,
+                                  strokeWidth: 2.5,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                  else
-                    _buildPrimaryButton(
-                      onPressed: _submit,
-                      text: _isLogin ? 'เข้าสู่ระบบ' : 'สร้างบัญชี',
-                    ),
+                        );
+                      }
+                      return _buildPrimaryButton(
+                        onPressed: _submit,
+                        text: _isLogin ? 'เข้าสู่ระบบ' : 'สร้างบัญชี',
+                      );
+                    },
+                  ),
 
                   SizedBox(height: r.hp(32)),
 
@@ -485,7 +489,7 @@ class _LoginScreenState extends State<LoginScreen>
                   SizedBox(height: r.hp(32)),
 
                   // Google Button
-                  _buildGoogleButton(authProvider),
+                  _buildGoogleButton(),
 
                   SizedBox(height: r.hp(40)),
 
@@ -676,10 +680,11 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildGoogleButton(AuthProvider authProvider) {
+  Widget _buildGoogleButton() {
     final r = ResponsiveHelper.of(context);
     return GestureDetector(
       onTap: () async {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
         final success = await authProvider.signInWithGoogle();
         if (success && mounted) {
           Navigator.pushReplacementNamed(context, '/parent/dashboard');

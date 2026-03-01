@@ -118,7 +118,7 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
   @override
   void initState() {
     super.initState();
-    _refreshTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
       if (mounted) setState(() {});
     });
     _pulseController = AnimationController(

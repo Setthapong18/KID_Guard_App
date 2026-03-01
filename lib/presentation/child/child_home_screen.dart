@@ -463,9 +463,8 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isChildModeActive', false);
-    await prefs.remove('activeChildId');
-    await prefs.remove('activeParentUid');
-    await prefs.remove('activeParentPin');
+    // Keep activeChildId, activeParentUid, activeParentPin
+    // so the app can auto-resume to child screen on next launch
 
     await _backgroundService.stopMonitoring();
     _locationService.stopTracking();

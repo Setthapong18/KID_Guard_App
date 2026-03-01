@@ -192,16 +192,28 @@ class UnlockFabWidget extends StatelessWidget {
 
   void _unlockChildDevice(BuildContext context) async {
     try {
+      final Map<String, dynamic> updateData = {
+        'isLocked': false,
+        'unlockRequested': true,
+      };
+      // When unlocking from time_limit: reset used time, clear the limit,
+      // and disable time limit briefly to prevent race condition re-lock
+      if (lockedChild.lockReason == 'time_limit') {
+        updateData['limitUsedTime'] = 0;
+        updateData['dailyTimeLimit'] = 0;
+        updateData['lockReason'] = '';
+        // Safety buffer: disable time limit for 5 min to prevent child-side
+        // re-locking before the dailyTimeLimit: 0 snapshot arrives
+        updateData['timeLimitDisabledUntil'] = Timestamp.fromDate(
+          DateTime.now().add(const Duration(minutes: 5)),
+        );
+      }
       await FirebaseFirestore.instance
           .collection('users')
           .doc(parentUid)
           .collection('children')
           .doc(lockedChild.id)
-          .update({
-            'isLocked': false,
-            'unlockRequested': true,
-            'limitUsedTime': 0,
-          });
+          .update(updateData);
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

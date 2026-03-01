@@ -112,6 +112,35 @@ class _SelectUserScreenState extends State<SelectUserScreen>
       await prefs.remove('activeChildId');
       await prefs.remove('activeParentUid');
       await prefs.remove('activeParentPin');
+    } else if (!isChildModeActive &&
+        activeChildId != null &&
+        activeParentUid != null) {
+      // Child mode was toggled off but device is still linked to a child
+      // Auto-navigate to child home so they don't have to re-enter PIN
+      final savedPin = prefs.getString('activeParentPin');
+      if (savedPin != null && savedPin.isNotEmpty) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final success = await authProvider.childLogin(savedPin);
+        if (success && authProvider.children.isNotEmpty) {
+          try {
+            final child = authProvider.children.firstWhere(
+              (c) => c.id == activeChildId,
+            );
+            await authProvider.selectChild(child);
+
+            if (mounted && !_hasNavigated) {
+              _hasNavigated = true;
+              Navigator.pushReplacementNamed(context, AppRoutes.childHome);
+            }
+            return;
+          } catch (_) {
+            // Child not found — clear stale data
+            await prefs.remove('activeChildId');
+            await prefs.remove('activeParentUid');
+            await prefs.remove('activeParentPin');
+          }
+        }
+      }
     }
 
     // SECOND: Check Firebase Auth for parent login (skip anonymous users)

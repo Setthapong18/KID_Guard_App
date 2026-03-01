@@ -194,19 +194,21 @@ class BackgroundService {
               final data = snapshot.data();
               if (data != null) {
                 // Time Limit
-                _dailyTimeLimit = data['dailyTimeLimit'] ?? 0;
-                // Only sync limitUsedTime from Firestore on initial load
-                // or when the Firestore value is LOWER (parent reset)
-                // During active monitoring, local counter is authoritative
-                final firestoreLimitUsed =
-                    data['limitUsedTime'] ?? data['screenTime'] ?? 0;
+                final newDailyLimit = data['dailyTimeLimit'] ?? 0;
+                // Detect parent reset: dailyTimeLimit cleared to 0 = no limit
+                if (_initialLimitLoaded &&
+                    newDailyLimit == 0 &&
+                    _dailyTimeLimit > 0) {
+                  // Parent cleared the time limit — reset used time
+                  _currentLimitUsedTime = 0;
+                }
+                _dailyTimeLimit = newDailyLimit;
+                // Only load limitUsedTime from Firestore ONCE on initial start
+                // After that, local counter is the SOLE authority
                 if (!_initialLimitLoaded) {
-                  // First load — use Firestore value
-                  _currentLimitUsedTime = firestoreLimitUsed;
+                  _currentLimitUsedTime =
+                      data['limitUsedTime'] ?? data['screenTime'] ?? 0;
                   _initialLimitLoaded = true;
-                } else if (firestoreLimitUsed < _currentLimitUsedTime) {
-                  // Parent reset the timer — use lower value
-                  _currentLimitUsedTime = firestoreLimitUsed;
                 }
 
                 // Time Limit Disabled Until (set by parent unlock)
@@ -371,37 +373,43 @@ class BackgroundService {
       final inQuiet = _isInQuietTime();
       final isRestricted = inSleep || inQuiet;
 
-      if (isRestricted || _isDeviceLocked) {
+      // Active pause = device locked with pauseUntil that hasn't expired yet
+      final isActivePause =
+          _isDeviceLocked &&
+          _pauseUntil != null &&
+          DateTime.now().isBefore(_pauseUntil!);
+
+      if (isRestricted || isActivePause) {
         if (!_isInRestrictedTime) {
           // Just entered restricted time
           _isInRestrictedTime = true;
 
           // Set isLocked in Firestore so parent can see unlock button
-          final reason = _isDeviceLocked
-              ? 'pause'
-              : (inSleep ? 'sleep' : 'quiet');
+          String reason;
+          String message;
+          if (isRestricted) {
+            reason = inSleep ? 'sleep' : 'quiet';
+            message = _getRestrictionReason();
+          } else {
+            reason = 'pause';
+            message = 'อุปกรณ์ถูกระงับชั่วคราว 🔒';
+          }
           _setLockedInFirestore(true, reason);
-
-          onBlockedAppDetected(
-            _isDeviceLocked
-                ? 'อุปกรณ์ถูกระงับชั่วคราว 🔒'
-                : _getRestrictionReason(),
-          );
-        }
-
-        // Auto-unlock check
-        if (_isDeviceLocked &&
-            _pauseUntil != null &&
-            DateTime.now().isAfter(_pauseUntil!)) {
-          _unlockDevice();
+          onBlockedAppDetected(message);
         }
         return; // Don't process further, device should be locked
       } else {
         if (_isInRestrictedTime) {
-          // Just exited restricted time - update Firestore
+          // Just exited restricted time (schedule ended or pause expired)
           _isInRestrictedTime = false;
-          _setLockedInFirestore(false, '');
-          onAppAllowed();
+          if (_pauseUntil != null) {
+            // Pause expired — clean up via _unlockDevice
+            _unlockDevice();
+          } else {
+            // Schedule ended — clear lock
+            _setLockedInFirestore(false, '');
+            onAppAllowed();
+          }
         }
       }
 
@@ -411,8 +419,12 @@ class BackgroundService {
           DateTime.now().isBefore(_timeLimitDisabledUntil!);
 
       if (!isTimeLimitDisabled &&
+          !_isDeviceLocked &&
           _dailyTimeLimit > 0 &&
           _currentLimitUsedTime >= _dailyTimeLimit) {
+        // Set local flags immediately to prevent re-triggering next tick
+        _isDeviceLocked = true;
+        _isInRestrictedTime = true;
         // Set isLocked in Firestore so parent can see unlock button
         _setLockedInFirestore(true, 'time_limit');
         onTimeLimitReached();
@@ -487,10 +499,12 @@ class BackgroundService {
             .collection('children')
             .doc(_currentChildId);
 
-        // 1. Update Realtime (Quick View) - both screenTime and limitUsedTime
+        // 1. Update Realtime (Quick View)
+        // Write absolute local value for limitUsedTime (NOT increment)
+        // to prevent Firestore value diverging from local counter
         await docRef.update({
           'screenTime': FieldValue.increment(10), // For statistics
-          'limitUsedTime': FieldValue.increment(10), // For limit checking
+          'limitUsedTime': _currentLimitUsedTime, // Absolute value
           'lastActive': FieldValue.serverTimestamp(),
         });
 
@@ -558,8 +572,12 @@ class BackgroundService {
           .doc(_currentParentId)
           .collection('children')
           .doc(_currentChildId)
-          .update({'isLocked': false, 'pauseUntil': null});
-      // Local state will be updated via listener
+          .update({'isLocked': false, 'pauseUntil': null, 'lockReason': ''});
+      // Reset local flags immediately so _checkForegroundApp works correctly
+      _isDeviceLocked = false;
+      _pauseUntil = null;
+      _isInRestrictedTime = false;
+      onAppAllowed();
     } catch (e) {
       // Error unlocking device
     }

@@ -119,7 +119,7 @@ class _MyAppState extends State<MyApp> {
       child: Consumer<LocaleProvider>(
         builder: (context, localeProvider, child) {
           return MaterialApp(
-            title: 'Kid Guard (BETA)',
+            title: 'Kid Guard',
             theme: AppTheme.lightTheme,
             locale: localeProvider.locale,
             supportedLocales: const [Locale('th'), Locale('en')],
