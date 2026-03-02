@@ -169,6 +169,7 @@ class LanguageSettingsScreen extends StatelessWidget {
         // Send notification
         final authProvider = Provider.of<AuthProvider>(context, listen: false);
         if (authProvider.userModel != null) {
+          if (!context.mounted) return;
           final l10n = AppLocalizations.of(context)!;
           await NotificationService().addNotification(
             authProvider.userModel!.uid,
@@ -185,6 +186,7 @@ class LanguageSettingsScreen extends StatelessWidget {
           );
         }
 
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

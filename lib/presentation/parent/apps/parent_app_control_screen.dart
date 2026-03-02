@@ -371,24 +371,21 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
   Future<void> _onRefreshPressed(String parentUid, String childId) async {
     // Refresh all devices for the selected child
     await _deviceService.requestAllDevicesSync(parentUid, childId);
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Row(
-            children: [
-              Icon(Icons.sync, color: Colors.white, size: 18),
-              SizedBox(width: 12),
-              Expanded(child: Text('กำลังขอข้อมูลแอพจากอุปกรณ์ลูก...')),
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          duration: const Duration(seconds: 3),
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.sync, color: Colors.white, size: 18),
+            SizedBox(width: 12),
+            Expanded(child: Text('กำลังขอข้อมูลแอพจากอุปกรณ์ลูก...')),
+          ],
         ),
-      );
-    }
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   Widget _buildStatItem(

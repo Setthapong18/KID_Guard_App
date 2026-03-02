@@ -209,6 +209,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
         return;
       }
 
+      if (!mounted) return;
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
       final child = authProvider.currentChild;
       final user = authProvider.userModel;
@@ -472,6 +473,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
     // Stop foreground notification service
     await ChildModeService.stop();
 
+    if (!mounted) return;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final child = authProvider.currentChild;
     final user = authProvider.userModel;
@@ -593,6 +595,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
         }
         await NativeSettingsSync().syncScreenTimeToFirebase(user.uid, child.id);
 
+        if (!mounted) return;
         // Update notification with latest screen time
         final authProvider = Provider.of<AuthProvider>(context, listen: false);
         final currentChild = authProvider.currentChild;

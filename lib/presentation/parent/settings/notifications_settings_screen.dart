@@ -45,6 +45,7 @@ class _NotificationsSettingsScreenState
     });
 
     // Sync from Firestore if available
+    if (!mounted) return;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.userModel != null) {
       final doc = await FirebaseFirestore.instance
@@ -86,6 +87,7 @@ class _NotificationsSettingsScreenState
     await prefs.setBool('notif_vibration', _vibrationEnabled);
 
     // Save to Firestore for cross-device sync
+    if (!mounted) return;
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     if (authProvider.userModel != null) {
       await FirebaseFirestore.instance
@@ -103,22 +105,22 @@ class _NotificationsSettingsScreenState
           }, SetOptions(merge: true));
 
       // Send notification
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        await NotificationService().addNotification(
-          authProvider.userModel!.uid,
-          NotificationModel(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            title: l10n.settingsUpdatedTitle,
-            message: l10n.settingsUpdatedMessage,
-            timestamp: DateTime.now(),
-            type: 'system',
-            category: 'system',
-            iconName: 'settings_rounded',
-            colorValue: _accentColor.value,
-          ),
-        );
-      }
+      if (!mounted) return;
+
+      final l10n = AppLocalizations.of(context)!;
+      await NotificationService().addNotification(
+        authProvider.userModel!.uid,
+        NotificationModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: l10n.settingsUpdatedTitle,
+          message: l10n.settingsUpdatedMessage,
+          timestamp: DateTime.now(),
+          type: 'system',
+          category: 'system',
+          iconName: 'settings_rounded',
+          colorValue: _accentColor.value,
+        ),
+      );
     }
   }
 

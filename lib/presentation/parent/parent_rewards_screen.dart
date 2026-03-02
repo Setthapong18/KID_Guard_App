@@ -200,6 +200,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
     );
 
     if (confirmed == true) {
+      if (!mounted) return;
       final authProvider = context.read<AuthProvider>();
       final user = authProvider.userModel;
       if (user == null) return;

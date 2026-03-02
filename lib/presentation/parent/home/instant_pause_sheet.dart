@@ -128,6 +128,9 @@ class _PauseOption extends StatelessWidget {
                 'pauseUntil': pauseUntil.toIso8601String(),
                 'isLocked': true,
               });
+
+          if (!ctx.mounted || !parentContext.mounted) return;
+
           Navigator.pop(ctx);
           ScaffoldMessenger.of(parentContext).showSnackBar(
             SnackBar(

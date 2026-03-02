@@ -83,6 +83,7 @@ class _SelectUserScreenState extends State<SelectUserScreen>
     final activeParentUid = prefs.getString('activeParentUid');
 
     if (isChildModeActive && activeChildId != null && activeParentUid != null) {
+      if (!mounted) return;
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       // ดึง PIN จาก SharedPreferences แล้วใช้ childLogin
@@ -119,6 +120,7 @@ class _SelectUserScreenState extends State<SelectUserScreen>
       // Auto-navigate to child home so they don't have to re-enter PIN
       final savedPin = prefs.getString('activeParentPin');
       if (savedPin != null && savedPin.isNotEmpty) {
+        if (!mounted) return;
         final authProvider = Provider.of<AuthProvider>(context, listen: false);
         final success = await authProvider.childLogin(savedPin);
         if (success && authProvider.children.isNotEmpty) {
@@ -147,6 +149,7 @@ class _SelectUserScreenState extends State<SelectUserScreen>
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
     if (firebaseUser != null && !firebaseUser.isAnonymous) {
+      if (!mounted) return;
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
       int attempts = 0;

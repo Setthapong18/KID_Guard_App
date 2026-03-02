@@ -101,6 +101,7 @@ class _ChildPinScreenState extends State<ChildPinScreen>
         await prefs.setString('activeParentUid', auth.userModel!.uid);
       }
 
+      if (!mounted) return;
       if (auth.children.isNotEmpty) {
         Navigator.pushReplacementNamed(context, AppRoutes.childSelection);
       } else {

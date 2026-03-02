@@ -298,6 +298,8 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
           .doc(childId)
           .set(childToSave.toMap());
 
+      if (!mounted) return;
+
       // Send Notification only on create
       if (!isEditing) {
         await NotificationService().addNotification(
@@ -329,30 +331,28 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
         );
       }
 
-      if (mounted) {
-        Navigator.pop(context); // Pop loading dialog
-        Navigator.pop(context); // Pop screen
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              isEditing
-                  ? AppLocalizations.of(context)!.profileUpdated
-                  : AppLocalizations.of(context)!.profileCreated(name),
-            ),
+      if (!mounted) return;
+      Navigator.pop(context); // Pop loading dialog
+      Navigator.pop(context); // Pop screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isEditing
+                ? AppLocalizations.of(context)!.profileUpdated
+                : AppLocalizations.of(context)!.profileCreated(name),
           ),
-        );
-      }
+        ),
+      );
     } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // Pop loading dialog
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.errorSavingProfile(e.toString()),
-            ),
+      if (!mounted) return;
+      Navigator.pop(context); // Pop loading dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.errorSavingProfile(e.toString()),
           ),
-        );
-      }
+        ),
+      );
     }
   }
 

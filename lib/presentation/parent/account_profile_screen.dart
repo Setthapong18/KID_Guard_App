@@ -107,9 +107,10 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final success = await authProvider.updateDisplayName(name);
+    if (!mounted) return;
 
     if (success) {
-      if (mounted) setState(() => _isEditingName = false);
+      setState(() => _isEditingName = false);
 
       // Send notification
       final user = authProvider.userModel;
@@ -129,10 +130,10 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         );
       }
 
-      if (mounted) _showSnackBar(AppLocalizations.of(context)!.updateSuccess);
+      if (!mounted) return;
+      _showSnackBar(AppLocalizations.of(context)!.updateSuccess);
     } else {
-      if (mounted)
-        _showSnackBar(AppLocalizations.of(context)!.updateError, isError: true);
+      _showSnackBar(AppLocalizations.of(context)!.updateError, isError: true);
     }
   }
 
@@ -168,42 +169,41 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
       currentPassword,
       newPassword,
     );
+    if (!mounted) return;
 
     if (success) {
-      if (mounted) {
-        setState(() {
-          _isChangingPassword = false;
-          _currentPasswordController.clear();
-          _newPasswordController.clear();
-          _confirmPasswordController.clear();
-        });
+      setState(() {
+        _isChangingPassword = false;
+        _currentPasswordController.clear();
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
+      });
 
-        // Send notification
-        final user = authProvider.userModel;
-        if (user != null) {
-          await NotificationService().addNotification(
-            user.uid,
-            NotificationModel(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              title: AppLocalizations.of(context)!.securityAlert,
-              message: AppLocalizations.of(context)!.passwordChangedSuccess,
-              timestamp: DateTime.now(),
-              type: 'alert',
-              category: 'system',
-              iconName: 'warning_rounded',
-              colorValue: Colors.red.value,
-            ),
-          );
-        }
-
-        _showSnackBar(AppLocalizations.of(context)!.passwordChangeSuccessMsg);
-      }
-    } else {
-      if (mounted)
-        _showSnackBar(
-          AppLocalizations.of(context)!.currentPasswordIncorrect,
-          isError: true,
+      // Send notification
+      final user = authProvider.userModel;
+      if (user != null) {
+        await NotificationService().addNotification(
+          user.uid,
+          NotificationModel(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            title: AppLocalizations.of(context)!.securityAlert,
+            message: AppLocalizations.of(context)!.passwordChangedSuccess,
+            timestamp: DateTime.now(),
+            type: 'alert',
+            category: 'system',
+            iconName: 'warning_rounded',
+            colorValue: Colors.red.value,
+          ),
         );
+      }
+
+      if (!mounted) return;
+      _showSnackBar(AppLocalizations.of(context)!.passwordChangeSuccessMsg);
+    } else {
+      _showSnackBar(
+        AppLocalizations.of(context)!.currentPasswordIncorrect,
+        isError: true,
+      );
     }
   }
 
