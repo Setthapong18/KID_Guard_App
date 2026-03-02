@@ -216,35 +216,96 @@ class _AboutScreenState extends State<AboutScreen> {
 
                   SizedBox(height: r.hp(32)),
 
-                  // Project Details Section
+                  // System Info Section
                   _buildSectionTitle(
                     Localizations.localeOf(context).languageCode == 'th'
-                        ? 'ข้อมูลโปรเจค'
-                        : 'Project Information',
+                        ? 'ระบบที่ใช้งาน'
+                        : 'System Information',
                   ),
                   SizedBox(height: r.hp(12)),
-                  _buildClassicCard([
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.school_outlined,
-                      title: 'Senior Project',
-                      value: 'CPE @ KMUTT',
-                    ),
-                    _buildDivider(context),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.code_rounded,
-                      title: 'Framework',
-                      value: 'Flutter 3.x',
-                    ),
-                    _buildDivider(context),
-                    _buildInfoRow(
-                      context,
-                      icon: Icons.cloud_done_outlined,
-                      title: 'Backend',
-                      value: 'Firebase / Firestore',
-                    ),
-                  ]),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildInfoGridCard(
+                          context,
+                          icon: Icons.code_rounded,
+                          title: 'Framework',
+                          value: 'Flutter',
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: _buildInfoGridCard(
+                          context,
+                          icon: Icons.cloud_done_outlined,
+                          title: 'Backend',
+                          value: 'Firebase / Firestore',
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // Developer Section
+                  _buildSectionTitle(
+                    Localizations.localeOf(context).languageCode == 'th'
+                        ? 'ทีมผู้พัฒนาโปรเจกต์'
+                        : 'Project Developers',
+                  ),
+                  SizedBox(height: r.hp(12)),
+                  _buildModernPersonCard(
+                    context,
+                    name: 'ปัณฑารีย์ ภูมิพลับ',
+                    role: Localizations.localeOf(context).languageCode == 'th'
+                        ? 'ผู้พัฒนา'
+                        : 'Developer',
+                    avatarUrl: 'ป',
+                  ),
+                  _buildModernPersonCard(
+                    context,
+                    name: 'เศรษฐพงษ์ ป้อมรุ่ง',
+                    role: Localizations.localeOf(context).languageCode == 'th'
+                        ? 'ผู้พัฒนา'
+                        : 'Developer',
+                    avatarUrl: 'ศ',
+                  ),
+                  _buildModernPersonCard(
+                    context,
+                    name: 'อรรถพล ดอกไม้',
+                    role: Localizations.localeOf(context).languageCode == 'th'
+                        ? 'ผู้พัฒนา'
+                        : 'Developer',
+                    avatarUrl: 'อ',
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Advisor Section
+                  _buildSectionTitle(
+                    Localizations.localeOf(context).languageCode == 'th'
+                        ? 'ที่ปรึกษาโปรเจกต์'
+                        : 'Project Advisors',
+                  ),
+                  SizedBox(height: r.hp(12)),
+                  _buildModernPersonCard(
+                    context,
+                    name: 'ผศ. ไกรมน มณีศิลป์',
+                    role: Localizations.localeOf(context).languageCode == 'th'
+                        ? 'อาจารย์ที่ปรึกษาหลัก'
+                        : 'Main Advisor',
+                    avatarUrl: 'ก',
+                    isAdvisor: true,
+                  ),
+                  _buildModernPersonCard(
+                    context,
+                    name: 'ผศ. พัฒน์นรี จันทราภิรมย์',
+                    role: Localizations.localeOf(context).languageCode == 'th'
+                        ? 'อาจารย์ที่ปรึกษาร่วม'
+                        : 'Co-Advisor',
+                    avatarUrl: 'พ',
+                    isAdvisor: true,
+                  ),
 
                   const SizedBox(height: 24),
 
@@ -377,37 +438,123 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 
-  Widget _buildInfoRow(
+  Widget _buildInfoGridCard(
     BuildContext context, {
     required IconData icon,
     required String title,
     required String value,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(16),
-      child: Row(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: _primaryColor, size: 22),
-          const SizedBox(width: 16),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: _primaryColor.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: _primaryColor, size: 20),
+          ),
+          const SizedBox(height: 12),
           Text(
             title,
             style: TextStyle(
-              color: colorScheme.onSurface,
+              color: colorScheme.onSurface.withValues(alpha: 0.6),
               fontWeight: FontWeight.w500,
-              fontSize: 14,
+              fontSize: 12,
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 4),
           Text(
             value,
             style: TextStyle(
-              color: colorScheme.onSurface.withValues(alpha: 0.6),
-              fontWeight: FontWeight.w400,
+              color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildModernPersonCard(
+    BuildContext context, {
+    required String name,
+    required String role,
+    required String avatarUrl,
+    bool isAdvisor = false,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isAdvisor
+              ? _primaryColor.withValues(alpha: 0.3)
+              : colorScheme.outline.withValues(alpha: 0.1),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: isAdvisor
+                ? _primaryColor.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.02),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: CircleAvatar(
+          backgroundColor: isAdvisor
+              ? _primaryColor
+              : _primaryColor.withValues(alpha: 0.1),
+          foregroundColor: isAdvisor ? Colors.white : _primaryColor,
+          child: Text(
+            avatarUrl,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        title: Text(
+          name,
+          style: TextStyle(
+            color: colorScheme.onSurface,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Text(
+            role,
+            style: TextStyle(
+              color: colorScheme.onSurface.withValues(alpha: 0.6),
+              fontWeight: FontWeight.w400,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        trailing: isAdvisor
+            ? const Icon(Icons.verified, color: _primaryColor, size: 20)
+            : null,
       ),
     );
   }
