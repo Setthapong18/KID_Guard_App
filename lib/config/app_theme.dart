@@ -11,7 +11,6 @@ class AppTheme {
       primary: const Color(0xFF6B9080), // Sage Green
       secondary: const Color(0xFFA4C3B2), // Mint
       tertiary: const Color(0xFFCCE3DE), // Light Mint
-      background: const Color(0xFFF6FBF4), // Soft Cream
       surface: Colors.white,
       brightness: Brightness.light,
     ),
@@ -94,7 +93,6 @@ class AppTheme {
       ), // Soft Sage (slightly brighter for dark mode)
       brightness: Brightness.dark,
       surface: const Color(0xFF1E293B), // Slate 800
-      background: const Color(0xFF0F172A), // Slate 900
     ),
     scaffoldBackgroundColor: const Color(0xFF0F172A),
     textTheme: ThemeData.dark().textTheme.apply(fontFamily: _fontFamily),

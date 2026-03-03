@@ -40,13 +40,13 @@ class StatsCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6B9080).withOpacity(0.15),
+            color: const Color(0xFF6B9080).withValues(alpha: 0.15),
             blurRadius: 40,
             offset: const Offset(0, 20),
             spreadRadius: -8,
           ),
           BoxShadow(
-            color: const Color(0xFF6B9080).withOpacity(0.10),
+            color: const Color(0xFF6B9080).withValues(alpha: 0.10),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -64,7 +64,7 @@ class StatsCardWidget extends StatelessWidget {
                     Text(
                       'Screen Time Today',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.3,
@@ -134,7 +134,7 @@ class StatsCardWidget extends StatelessWidget {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: TweenAnimationBuilder<double>(
@@ -223,7 +223,7 @@ class _YesterdayComparison extends StatelessWidget {
         if (yesterdaySeconds == 0) {
           comparisonText = 'No data from yesterday';
           icon = Icons.info_outline_rounded;
-          iconBgColor = Colors.white.withOpacity(0.2);
+          iconBgColor = Colors.white.withValues(alpha: 0.2);
         } else {
           final diff = todaySeconds - yesterdaySeconds;
           final percentage = ((diff.abs() / yesterdaySeconds) * 100).toInt();
@@ -231,22 +231,22 @@ class _YesterdayComparison extends StatelessWidget {
           if (diff < 0) {
             comparisonText = '$percentage% less than yesterday';
             icon = Icons.trending_down_rounded;
-            iconBgColor = const Color(0xFF10B981).withOpacity(0.3);
+            iconBgColor = const Color(0xFF10B981).withValues(alpha: 0.3);
           } else if (diff > 0) {
             comparisonText = '$percentage% more than yesterday';
             icon = Icons.trending_up_rounded;
-            iconBgColor = const Color(0xFFEF4444).withOpacity(0.3);
+            iconBgColor = const Color(0xFFEF4444).withValues(alpha: 0.3);
           } else {
             comparisonText = 'Same as yesterday';
             icon = Icons.remove_rounded;
-            iconBgColor = Colors.white.withOpacity(0.2);
+            iconBgColor = Colors.white.withValues(alpha: 0.2);
           }
         }
 
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.12),
+            color: Colors.white.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
@@ -272,7 +272,7 @@ class _YesterdayComparison extends StatelessWidget {
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: Colors.white.withOpacity(0.5),
+                color: Colors.white.withValues(alpha: 0.5),
                 size: 14,
               ),
             ],
@@ -295,7 +295,7 @@ class MiniProgressPainter extends CustomPainter {
     final radius = size.width / 2 - 4;
 
     final bgPaint = Paint()
-      ..color = Colors.white.withOpacity(0.2)
+      ..color = Colors.white.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 6
       ..strokeCap = StrokeCap.round;

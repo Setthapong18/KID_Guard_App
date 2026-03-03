@@ -1,6 +1,8 @@
 // ==================== Onboarding Screen ====================
 /// หน้า Tutorial/Walkthrough สำหรับผู้ใช้ใหม่
 /// แสดงครั้งแรกที่เปิดแอพ + เข้าถึงได้จาก Settings
+library;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../logic/providers/onboarding_provider.dart';
@@ -219,7 +221,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                 borderRadius: BorderRadius.circular(r.radius(36)),
                 boxShadow: [
                   BoxShadow(
-                    color: page.iconBgGradient.first.withOpacity(0.3),
+                    color: page.iconBgGradient.first.withValues(alpha: 0.3),
                     blurRadius: 30,
                     offset: const Offset(0, 15),
                   ),
@@ -303,7 +305,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           width: isActive ? r.wp(28) : r.wp(8),
           height: r.wp(8),
           decoration: BoxDecoration(
-            color: isActive ? _accentColor : _accentColor.withOpacity(0.2),
+            color: isActive ? _accentColor : _accentColor.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(r.radius(4)),
           ),
         );
@@ -325,7 +327,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
           borderRadius: BorderRadius.circular(r.radius(18)),
           boxShadow: [
             BoxShadow(
-              color: _accentColor.withOpacity(0.3),
+              color: _accentColor.withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),

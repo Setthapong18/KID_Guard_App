@@ -59,7 +59,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -76,7 +76,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
                   style: TextStyle(
                     fontSize: r.sp(28),
                     fontWeight: FontWeight.w700,
-                    color: colorScheme.onBackground,
+                    color: colorScheme.onSurface,
                     letterSpacing: -0.5,
                   ),
                 ),
@@ -85,7 +85,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
                   'เลือก avatar และกรอกข้อมูลของน้อง',
                   style: TextStyle(
                     fontSize: r.sp(14),
-                    color: colorScheme.onBackground.withOpacity(0.5),
+                    color: colorScheme.onSurface.withValues(alpha: 0.5),
                     fontWeight: FontWeight.w400,
                   ),
                 ),
@@ -121,7 +121,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
                               boxShadow: isSelected
                                   ? [
                                       BoxShadow(
-                                        color: colorScheme.primary.withOpacity(
+                                        color: colorScheme.primary.withValues(alpha: 
                                           0.25,
                                         ),
                                         blurRadius: 16,
@@ -132,7 +132,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
                             ),
                             child: CircleAvatar(
                               radius: r.wp(40),
-                              backgroundColor: colorScheme.tertiary.withOpacity(
+                              backgroundColor: colorScheme.tertiary.withValues(alpha: 
                                 0.3,
                               ),
                               backgroundImage: AssetImage(_avatars[index]),
@@ -179,12 +179,12 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(r.radius(14)),
           border: Border.all(
-            color: colorScheme.outline.withOpacity(0.12),
+            color: colorScheme.outline.withValues(alpha: 0.12),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -192,7 +192,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
         ),
         child: Icon(
           Icons.arrow_back_ios_rounded,
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
           size: r.iconSize(16),
         ),
       ),
@@ -213,12 +213,12 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
       style: TextStyle(
         fontSize: r.sp(15),
         fontWeight: FontWeight.w500,
-        color: colorScheme.onBackground,
+        color: colorScheme.onSurface,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: colorScheme.onBackground.withOpacity(0.5),
+          color: colorScheme.onSurface.withValues(alpha: 0.5),
           fontWeight: FontWeight.w400,
           fontSize: r.sp(14),
         ),
@@ -230,7 +230,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
           padding: EdgeInsets.only(left: r.wp(16), right: r.wp(12)),
           child: Icon(
             icon,
-            color: colorScheme.onBackground.withOpacity(0.35),
+            color: colorScheme.onSurface.withValues(alpha: 0.35),
             size: r.iconSize(20),
           ),
         ),
@@ -244,7 +244,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(r.radius(16)),
           borderSide: BorderSide(
-            color: colorScheme.outline.withOpacity(0.12),
+            color: colorScheme.outline.withValues(alpha: 0.12),
             width: 1,
           ),
         ),
@@ -287,7 +287,7 @@ class _ChildProfileSetupScreenState extends State<ChildProfileSetupScreen>
           borderRadius: BorderRadius.circular(r.radius(16)),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.3),
+              color: colorScheme.primary.withValues(alpha: 0.3),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),

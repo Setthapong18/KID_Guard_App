@@ -52,18 +52,18 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Help Center',
           style: TextStyle(
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -78,7 +78,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [_accentColor, _accentColor.withOpacity(0.8)],
+                  colors: [_accentColor, _accentColor.withValues(alpha: 0.8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -89,7 +89,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -133,7 +133,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -143,14 +143,14 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                 children: [
                   Icon(
                     Icons.search,
-                    color: colorScheme.onSurface.withOpacity(0.4),
+                    color: colorScheme.onSurface.withValues(alpha: 0.4),
                     size: 22,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     'ค้นหาคำถาม...',
                     style: TextStyle(
-                      color: colorScheme.onSurface.withOpacity(0.4),
+                      color: colorScheme.onSurface.withValues(alpha: 0.4),
                       fontSize: 15,
                     ),
                   ),
@@ -164,7 +164,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
             Text(
               'คำถามที่พบบ่อย',
               style: TextStyle(
-                color: colorScheme.onBackground.withOpacity(0.6),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -184,7 +184,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                   borderRadius: BorderRadius.circular(14),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
+                      color: Colors.black.withValues(alpha: 0.04),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -210,7 +210,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                                 width: 28,
                                 height: 28,
                                 decoration: BoxDecoration(
-                                  color: _accentColor.withOpacity(0.1),
+                                  color: _accentColor.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Center(
@@ -240,7 +240,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                                 duration: const Duration(milliseconds: 200),
                                 child: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: colorScheme.onSurface.withOpacity(0.3),
+                                  color: colorScheme.onSurface.withValues(alpha: 0.3),
                                 ),
                               ),
                             ],
@@ -252,7 +252,7 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                               child: Text(
                                 faq['answer']!,
                                 style: TextStyle(
-                                  color: colorScheme.onSurface.withOpacity(0.6),
+                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
                                   fontSize: 13,
                                   height: 1.6,
                                 ),
@@ -277,9 +277,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colorScheme.primary.withOpacity(0.2)),
+                border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
               ),
               child: Row(
                 children: [

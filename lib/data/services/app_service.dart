@@ -287,7 +287,9 @@ class AppService {
           type: isLocked ? 'alert' : 'success',
           category: 'app_blocked',
           iconName: isLocked ? 'block_rounded' : 'check_circle_rounded',
-          colorValue: isLocked ? Colors.red.value : Colors.green.value,
+          colorValue: isLocked
+              ? Colors.red.toARGB32()
+              : Colors.green.toARGB32(),
         ),
       );
     } catch (e) {

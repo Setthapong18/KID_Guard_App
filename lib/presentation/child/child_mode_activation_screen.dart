@@ -14,8 +14,6 @@ class ChildModeActivationScreen extends StatefulWidget {
 }
 
 class _ChildModeActivationScreenState extends State<ChildModeActivationScreen> {
-  late final BackgroundService _backgroundService;
-  final OverlayService _overlayService = OverlayService();
   bool _isChildrenModeActive = false;
 
   // Modern Sage Green Theme Colors
@@ -30,7 +28,7 @@ class _ChildModeActivationScreenState extends State<ChildModeActivationScreen> {
   @override
   void initState() {
     super.initState();
-    _backgroundService = BackgroundService(
+    BackgroundService(
       onBlockedAppDetected: (packageName) {
         OverlayService().showBlockOverlay(packageName);
       },
@@ -648,8 +646,8 @@ class _ChildModeActivationScreenState extends State<ChildModeActivationScreen> {
     final hours = seconds ~/ 3600;
     final minutes = (seconds % 3600) ~/ 60;
     if (hours > 0) {
-      return '${hours}ชม. ${minutes}น.';
+      return '$hoursชม. $minutesน.';
     }
-    return '${minutes}น.';
+    return '$minutesน.';
   }
 }

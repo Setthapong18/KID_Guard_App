@@ -31,7 +31,7 @@ class ChildrenCarouselWidget extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: children.length + 1,
-        separatorBuilder: (_, __) => SizedBox(width: r.wp(16)),
+        separatorBuilder: (context, index) => SizedBox(width: r.wp(16)),
         itemBuilder: (context, index) {
           if (index == children.length) {
             return _buildAddButton(context, r);
@@ -54,7 +54,7 @@ class ChildrenCarouselWidget extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(r.radius(20)),
           border: Border.all(
-            color: colorScheme.primary.withOpacity(0.3),
+            color: colorScheme.primary.withValues(alpha: 0.3),
             width: 2,
             strokeAlign: BorderSide.strokeAlignInside,
           ),
@@ -131,8 +131,8 @@ class ChildrenCarouselWidget extends StatelessWidget {
                     )
                   : LinearGradient(
                       colors: [
-                        Colors.white.withOpacity(0.95),
-                        Colors.white.withOpacity(0.85),
+                        Colors.white.withValues(alpha: 0.95),
+                        Colors.white.withValues(alpha: 0.85),
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -141,22 +141,22 @@ class ChildrenCarouselWidget extends StatelessWidget {
               border: isSelected
                   ? null
                   : Border.all(
-                      color: Colors.white.withOpacity(0.6),
+                      color: Colors.white.withValues(alpha: 0.6),
                       width: 1.5,
                     ),
               boxShadow: [
                 BoxShadow(
                   color: isSelected
-                      ? colorScheme.primary.withOpacity(0.25)
-                      : Colors.black.withOpacity(0.06),
+                      ? colorScheme.primary.withValues(alpha: 0.25)
+                      : Colors.black.withValues(alpha: 0.06),
                   blurRadius: isSelected ? 30 : 20,
                   offset: const Offset(0, 12),
                   spreadRadius: isSelected ? 0 : -4,
                 ),
                 BoxShadow(
                   color: isSelected
-                      ? colorScheme.primary.withOpacity(0.15)
-                      : Colors.black.withOpacity(0.03),
+                      ? colorScheme.primary.withValues(alpha: 0.15)
+                      : Colors.black.withValues(alpha: 0.03),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
@@ -172,7 +172,7 @@ class ChildrenCarouselWidget extends StatelessWidget {
                         CircleAvatar(
                           radius: r.wp(24),
                           backgroundColor: isSelected
-                              ? Colors.white.withOpacity(0.2)
+                              ? Colors.white.withValues(alpha: 0.2)
                               : colorScheme.primaryContainer,
                           backgroundImage: child.avatar != null
                               ? AssetImage(child.avatar!)
@@ -219,7 +219,7 @@ class ChildrenCarouselWidget extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? Colors.white.withOpacity(0.2)
+                            ? Colors.white.withValues(alpha: 0.2)
                             : Colors.grey.shade100,
                         borderRadius: BorderRadius.circular(r.radius(8)),
                       ),

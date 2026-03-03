@@ -61,10 +61,10 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
         leading: Container(
           margin: EdgeInsets.all(r.wp(8)),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
+            color: Colors.white.withValues(alpha: 0.9),
             borderRadius: BorderRadius.circular(r.radius(12)),
             boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8),
             ],
           ),
           child: IconButton(
@@ -76,10 +76,10 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
           Container(
             margin: EdgeInsets.all(r.wp(8)),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
+              color: Colors.white.withValues(alpha: 0.9),
               borderRadius: BorderRadius.circular(r.radius(12)),
               boxShadow: [
-                BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 8),
               ],
             ),
             child: IconButton(
@@ -208,7 +208,7 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
                 height: r.wp(80),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: colorScheme.primary.withOpacity(0.2),
+                  color: colorScheme.primary.withValues(alpha: 0.2),
                 ),
               ),
             );
@@ -225,7 +225,7 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
             ),
             boxShadow: [
               BoxShadow(
-                color: colorScheme.primary.withOpacity(0.4),
+                color: colorScheme.primary.withValues(alpha: 0.4),
                 blurRadius: 12,
                 spreadRadius: 2,
               ),
@@ -274,9 +274,9 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
               vertical: r.hp(10),
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withValues(alpha: 0.8),
               borderRadius: BorderRadius.circular(r.radius(16)),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -337,11 +337,11 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
           child: Container(
             padding: EdgeInsets.all(r.wp(24)),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withValues(alpha: 0.85),
               borderRadius: BorderRadius.vertical(
                 top: Radius.circular(r.radius(28)),
               ),
-              border: Border.all(color: Colors.white.withOpacity(0.5)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.5)),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -418,7 +418,7 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
                   Container(
                     padding: EdgeInsets.all(r.wp(16)),
                     decoration: BoxDecoration(
-                      color: colorScheme.surfaceVariant.withOpacity(0.5),
+                      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(r.radius(16)),
                     ),
                     child: Row(
@@ -496,7 +496,7 @@ class _ChildLocationScreenState extends State<ChildLocationScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: r.wp(10), vertical: r.hp(6)),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(r.radius(12)),
       ),
       child: Row(

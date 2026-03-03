@@ -383,8 +383,9 @@ class _LoginScreenState extends State<LoginScreen>
                     icon: Icons.mail_outline_rounded,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
-                      if (value == null || value.isEmpty)
+                      if (value == null || value.isEmpty) {
                         return 'กรุณากรอกอีเมล';
+                      }
                       if (!value.contains('@')) return 'อีเมลไม่ถูกต้อง';
                       return null;
                     },
@@ -411,8 +412,9 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ),
                     validator: (value) {
-                      if (value == null || value.length < 6)
+                      if (value == null || value.length < 6) {
                         return 'รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร';
+                      }
                       return null;
                     },
                   ),
@@ -455,7 +457,7 @@ class _LoginScreenState extends State<LoginScreen>
                               borderRadius: BorderRadius.circular(r.radius(16)),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.06),
+                                  color: Colors.black.withValues(alpha: 0.06),
                                   blurRadius: 16,
                                   offset: const Offset(0, 4),
                                 ),
@@ -519,7 +521,7 @@ class _LoginScreenState extends State<LoginScreen>
           border: Border.all(color: _borderColor, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -544,7 +546,7 @@ class _LoginScreenState extends State<LoginScreen>
         borderRadius: BorderRadius.circular(r.radius(22)),
         boxShadow: [
           BoxShadow(
-            color: _primaryColor.withOpacity(0.25),
+            color: _primaryColor.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -639,7 +641,7 @@ class _LoginScreenState extends State<LoginScreen>
           borderRadius: BorderRadius.circular(r.radius(16)),
           boxShadow: [
             BoxShadow(
-              color: _primaryColor.withOpacity(0.25),
+              color: _primaryColor.withValues(alpha: 0.25),
               blurRadius: 16,
               offset: const Offset(0, 8),
             ),
@@ -698,7 +700,7 @@ class _LoginScreenState extends State<LoginScreen>
           border: Border.all(color: _borderColor, width: 1),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 12,
               offset: const Offset(0, 2),
             ),
@@ -711,7 +713,7 @@ class _LoginScreenState extends State<LoginScreen>
               'https://www.google.com/favicon.ico',
               width: r.wp(20),
               height: r.wp(20),
-              errorBuilder: (_, __, ___) => Container(
+              errorBuilder: (context, error, stackTrace) => Container(
                 width: r.wp(20),
                 height: r.wp(20),
                 decoration: BoxDecoration(

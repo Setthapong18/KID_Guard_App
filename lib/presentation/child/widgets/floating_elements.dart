@@ -125,12 +125,12 @@ class _FloatingElementsState extends State<FloatingElements>
             ),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFFFE082).withOpacity(glow),
+                color: const Color(0xFFFFE082).withValues(alpha: glow),
                 blurRadius: 35,
                 spreadRadius: 8,
               ),
               BoxShadow(
-                color: const Color(0xFFFFF9E6).withOpacity(glow * 0.8),
+                color: const Color(0xFFFFF9E6).withValues(alpha: glow * 0.8),
                 blurRadius: 50,
                 spreadRadius: 15,
               ),
@@ -146,7 +146,7 @@ class _FloatingElementsState extends State<FloatingElements>
                   width: 8,
                   height: 3,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE0A030).withOpacity(0.5),
+                    color: const Color(0xFFE0A030).withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -158,7 +158,7 @@ class _FloatingElementsState extends State<FloatingElements>
                   width: 8,
                   height: 3,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE0A030).withOpacity(0.5),
+                    color: const Color(0xFFE0A030).withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -171,7 +171,7 @@ class _FloatingElementsState extends State<FloatingElements>
                   width: 10,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFB6C1).withOpacity(0.4),
+                    color: const Color(0xFFFFB6C1).withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -183,7 +183,7 @@ class _FloatingElementsState extends State<FloatingElements>
                   width: 10,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFB6C1).withOpacity(0.4),
+                    color: const Color(0xFFFFB6C1).withValues(alpha: 0.4),
                     borderRadius: BorderRadius.circular(5),
                   ),
                 ),
@@ -238,8 +238,8 @@ class _FloatingElementsState extends State<FloatingElements>
                   boxShadow: [
                     BoxShadow(
                       color: star.isBig
-                          ? const Color(0xFFFFE082).withOpacity(0.8)
-                          : Colors.white.withOpacity(0.6),
+                          ? const Color(0xFFFFE082).withValues(alpha: 0.8)
+                          : Colors.white.withValues(alpha: 0.6),
                       blurRadius: star.isBig ? 12 : 6,
                       spreadRadius: star.isBig ? 3 : 1,
                     ),
@@ -278,7 +278,7 @@ class _FloatingElementsState extends State<FloatingElements>
                 size: heart.size,
                 color: heart.color,
                 shadows: [
-                  Shadow(color: heart.color.withOpacity(0.5), blurRadius: 8),
+                  Shadow(color: heart.color.withValues(alpha: 0.5), blurRadius: 8),
                 ],
               ),
             ),
@@ -300,7 +300,7 @@ class _SoftCloud extends StatelessWidget {
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-        child: Container(
+        child: SizedBox(
           width: size * 2.2,
           height: size,
           child: Stack(
@@ -314,8 +314,8 @@ class _SoftCloud extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: RadialGradient(
                       colors: [
-                        Colors.white.withOpacity(0.4),
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.4),
+                        Colors.white.withValues(alpha: 0.1),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(size),
@@ -331,8 +331,8 @@ class _SoftCloud extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: RadialGradient(
                       colors: [
-                        Colors.white.withOpacity(0.5),
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.5),
+                        Colors.white.withValues(alpha: 0.1),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(size),
@@ -348,8 +348,8 @@ class _SoftCloud extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: RadialGradient(
                       colors: [
-                        Colors.white.withOpacity(0.35),
-                        Colors.white.withOpacity(0.1),
+                        Colors.white.withValues(alpha: 0.35),
+                        Colors.white.withValues(alpha: 0.1),
                       ],
                     ),
                     borderRadius: BorderRadius.circular(size),
@@ -392,8 +392,8 @@ class _AuroraPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        const Color(0xFFE8B4F8).withOpacity(0.15),
-        const Color(0xFFB388EB).withOpacity(0.08),
+        const Color(0xFFE8B4F8).withValues(alpha: 0.15),
+        const Color(0xFFB388EB).withValues(alpha: 0.08),
         Colors.transparent,
       ],
     ).createShader(Rect.fromLTWH(0, 0, size.width, size.height * 0.3));
@@ -418,8 +418,8 @@ class _AuroraPainter extends CustomPainter {
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [
-        const Color(0xFF88C8F8).withOpacity(0.12),
-        const Color(0xFFB8A0E8).withOpacity(0.06),
+        const Color(0xFF88C8F8).withValues(alpha: 0.12),
+        const Color(0xFFB8A0E8).withValues(alpha: 0.06),
         Colors.transparent,
       ],
     ).createShader(Rect.fromLTWH(0, 0, size.width, size.height * 0.4));

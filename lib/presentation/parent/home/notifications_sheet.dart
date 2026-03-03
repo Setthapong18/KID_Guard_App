@@ -104,7 +104,8 @@ void showNotificationsSheet(BuildContext context, String userId) {
                 return ListView.separated(
                   padding: const EdgeInsets.all(24),
                   itemCount: notifications.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 16),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final item = notifications[index];
                     return Dismissible(
@@ -149,12 +150,14 @@ void showNotificationsSheet(BuildContext context, String userId) {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: !item.isRead
-                                  ? const Color(0xFF10B981).withOpacity(0.3)
+                                  ? const Color(
+                                      0xFF10B981,
+                                    ).withValues(alpha: 0.3)
                                   : Colors.grey.shade200,
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.02),
+                                color: Colors.black.withValues(alpha: 0.02),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -166,7 +169,7 @@ void showNotificationsSheet(BuildContext context, String userId) {
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: item.color.withOpacity(0.1),
+                                  color: item.color.withValues(alpha: 0.1),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(

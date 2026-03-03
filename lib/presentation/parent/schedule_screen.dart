@@ -34,7 +34,7 @@ class ScheduleScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(r.radius(12)),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                 ),
               ],
@@ -56,8 +56,9 @@ class ScheduleScreen extends StatelessWidget {
             .collection('children')
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
           final childrenDocs = snapshot.data!.docs;
           if (childrenDocs.isEmpty) {
             return Center(
@@ -152,7 +153,7 @@ class _ScheduleCardState extends State<_ScheduleCard> {
         borderRadius: BorderRadius.circular(r.radius(24)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -167,7 +168,7 @@ class _ScheduleCardState extends State<_ScheduleCard> {
               children: [
                 CircleAvatar(
                   radius: r.wp(24),
-                  backgroundColor: const Color(0xFF6B9080).withOpacity(0.1),
+                  backgroundColor: const Color(0xFF6B9080).withValues(alpha: 0.1),
                   backgroundImage: widget.child.avatar != null
                       ? AssetImage(widget.child.avatar!)
                       : null,
@@ -216,15 +217,15 @@ class _ScheduleCardState extends State<_ScheduleCard> {
                 decoration: BoxDecoration(
                   color: period.enabled
                       ? (isSleep
-                            ? const Color(0xFF6B9080).withOpacity(0.05)
-                            : const Color(0xFF10B981).withOpacity(0.05))
+                            ? const Color(0xFF6B9080).withValues(alpha: 0.05)
+                            : const Color(0xFF10B981).withValues(alpha: 0.05))
                       : const Color(0xFFF5F5F7),
                   borderRadius: BorderRadius.circular(r.radius(16)),
                   border: Border.all(
                     color: period.enabled
                         ? (isSleep
-                              ? const Color(0xFF6B9080).withOpacity(0.2)
-                              : const Color(0xFF10B981).withOpacity(0.2))
+                              ? const Color(0xFF6B9080).withValues(alpha: 0.2)
+                              : const Color(0xFF10B981).withValues(alpha: 0.2))
                         : const Color(0xFFE5E5EA),
                   ),
                 ),
@@ -235,9 +236,9 @@ class _ScheduleCardState extends State<_ScheduleCard> {
                       decoration: BoxDecoration(
                         color: period.enabled
                             ? (isSleep
-                                  ? const Color(0xFF6B9080).withOpacity(0.1)
-                                  : const Color(0xFF10B981).withOpacity(0.1))
-                            : Colors.grey.withOpacity(0.1),
+                                  ? const Color(0xFF6B9080).withValues(alpha: 0.1)
+                                  : const Color(0xFF10B981).withValues(alpha: 0.1))
+                            : Colors.grey.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(r.radius(12)),
                       ),
                       child: Icon(
@@ -280,7 +281,7 @@ class _ScheduleCardState extends State<_ScheduleCard> {
                                     decoration: BoxDecoration(
                                       color: const Color(
                                         0xFF6B9080,
-                                      ).withOpacity(0.1),
+                                      ).withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(
                                         r.radius(8),
                                       ),
@@ -322,7 +323,7 @@ class _ScheduleCardState extends State<_ScheduleCard> {
                         widget.parentId,
                         widget.child.id,
                       ),
-                      activeColor: isSleep
+                      activeThumbColor: isSleep
                           ? const Color(0xFF6B9080)
                           : const Color(0xFF10B981),
                     ),
@@ -349,10 +350,10 @@ class _ScheduleCardState extends State<_ScheduleCard> {
               child: Container(
                 padding: EdgeInsets.all(r.wp(16)),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF6B9080).withOpacity(0.05),
+                  color: const Color(0xFF6B9080).withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(r.radius(16)),
                   border: Border.all(
-                    color: const Color(0xFF6B9080).withOpacity(0.2),
+                    color: const Color(0xFF6B9080).withValues(alpha: 0.2),
                   ),
                 ),
                 child: Row(
@@ -361,7 +362,7 @@ class _ScheduleCardState extends State<_ScheduleCard> {
                     Container(
                       padding: EdgeInsets.all(r.wp(6)),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6B9080).withOpacity(0.1),
+                        color: const Color(0xFF6B9080).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(r.radius(8)),
                       ),
                       child: Icon(
@@ -510,8 +511,8 @@ class _EditScheduleDialogState extends State<_EditScheduleDialog> {
                   child: Container(
                     padding: EdgeInsets.all(r.wp(16)),
                     decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.05),
-                      border: Border.all(color: primaryColor.withOpacity(0.2)),
+                      color: primaryColor.withValues(alpha: 0.05),
+                      border: Border.all(color: primaryColor.withValues(alpha: 0.2)),
                       borderRadius: BorderRadius.circular(r.radius(12)),
                     ),
                     child: Column(
@@ -551,8 +552,8 @@ class _EditScheduleDialogState extends State<_EditScheduleDialog> {
                   child: Container(
                     padding: EdgeInsets.all(r.wp(16)),
                     decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.05),
-                      border: Border.all(color: primaryColor.withOpacity(0.2)),
+                      color: primaryColor.withValues(alpha: 0.05),
+                      border: Border.all(color: primaryColor.withValues(alpha: 0.2)),
                       borderRadius: BorderRadius.circular(r.radius(12)),
                     ),
                     child: Column(

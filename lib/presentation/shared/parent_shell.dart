@@ -16,17 +16,18 @@ class ParentShell extends StatefulWidget {
 class _ParentShellState extends State<ParentShell> {
   int _selectedIndex = 0;
 
-  Future<bool> _onWillPop() async {
+  void _onPopInvoked(bool didPop, dynamic result) async {
+    if (didPop) return;
+
     if (_selectedIndex != 0) {
       setState(() {
         _selectedIndex = 0;
       });
-      return false;
+      return;
     }
 
     // Exit app but keep background services running
     await SystemNavigator.pop();
-    return false;
   }
 
   @override
@@ -40,15 +41,16 @@ class _ParentShellState extends State<ParentShell> {
       ParentSettingsScreen(),
     ];
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: _onPopInvoked,
       child: Scaffold(
         body: IndexedStack(index: _selectedIndex, children: screens),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
+                color: Colors.black.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),

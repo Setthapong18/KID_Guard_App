@@ -186,7 +186,7 @@ class AuthProvider with ChangeNotifier {
             type: 'system',
             category: 'system',
             iconName: 'vpn_key_rounded',
-            colorValue: Colors.orange.value,
+            colorValue: Colors.orange.toARGB32(),
           ),
         );
       }

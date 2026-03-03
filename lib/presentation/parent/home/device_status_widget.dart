@@ -35,16 +35,16 @@ class DeviceStatusWidget extends StatelessWidget {
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Colors.grey.shade100.withOpacity(0.8)),
+        border: Border.all(color: Colors.grey.shade100.withValues(alpha: 0.8)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
             spreadRadius: -5,
           ),
           BoxShadow(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withValues(alpha: 0.8),
             blurRadius: 8,
             offset: const Offset(-2, -2),
           ),
@@ -58,7 +58,7 @@ class DeviceStatusWidget extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               color: isOnline
-                  ? const Color(0xFF10B981).withOpacity(0.1)
+                  ? const Color(0xFF10B981).withValues(alpha: 0.1)
                   : Colors.grey.shade100,
               borderRadius: BorderRadius.circular(16),
             ),
@@ -79,7 +79,7 @@ class DeviceStatusWidget extends StatelessWidget {
                               BoxShadow(
                                 color: const Color(
                                   0xFF10B981,
-                                ).withOpacity(0.4 - pulseAnimation.value * 0.2),
+                                ).withValues(alpha: 0.4 - pulseAnimation.value * 0.2),
                                 blurRadius: 12,
                                 spreadRadius: pulseAnimation.value * 4,
                               ),
@@ -119,7 +119,7 @@ class DeviceStatusWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(

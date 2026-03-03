@@ -172,7 +172,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen>
             '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
 
         return Scaffold(
-          backgroundColor: colorScheme.background,
+          backgroundColor: colorScheme.surface,
           floatingActionButton: anyChildLocked && lockedChild != null
               ? UnlockFabWidget(
                   parentUid: user.uid,
@@ -306,7 +306,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen>
             fontSize: r.sp(20),
             fontWeight: FontWeight.w700,
             letterSpacing: -0.3,
-            color: Theme.of(context).colorScheme.onBackground,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         if (onSeeAll != null)
@@ -323,7 +323,7 @@ class _ParentHomeScreenState extends State<ParentHomeScreen>
                   decoration: BoxDecoration(
                     color: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.08),
+                    ).colorScheme.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(r.radius(10)),
                   ),
                   child: Text(

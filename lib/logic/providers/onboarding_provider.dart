@@ -1,5 +1,7 @@
 // ==================== Onboarding Provider ====================
 /// จัดการสถานะ onboarding: เคยดูหรือยัง (SharedPreferences)
+library;
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

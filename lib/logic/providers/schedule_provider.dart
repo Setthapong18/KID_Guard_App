@@ -1,6 +1,8 @@
 // ==================== Schedule Provider ====================
 /// จัดการ logic ของตารางเวลา: Sleep Schedule + Quiet Times
 /// เก็บข้อมูลแยกตามเด็กแต่ละคน (per-child)
+library;
+
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../data/models/schedule_period_model.dart';

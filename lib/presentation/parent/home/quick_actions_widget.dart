@@ -107,12 +107,12 @@ class _EnhancedActionCardState extends State<EnhancedActionCard>
               ResponsiveHelper.of(context).radius(22),
             ),
             border: Border.all(
-              color: Colors.grey.shade100.withOpacity(0.8),
+              color: Colors.grey.shade100.withValues(alpha: 0.8),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
                 spreadRadius: -4,
@@ -125,7 +125,7 @@ class _EnhancedActionCardState extends State<EnhancedActionCard>
               Container(
                 padding: EdgeInsets.all(ResponsiveHelper.of(context).wp(14)),
                 decoration: BoxDecoration(
-                  color: widget.action.color.withOpacity(0.1),
+                  color: widget.action.color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(

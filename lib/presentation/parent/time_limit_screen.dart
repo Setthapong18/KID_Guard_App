@@ -20,7 +20,7 @@ class TimeLimitScreen extends StatelessWidget {
 
     if (user == null) {
       return Scaffold(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         body: Center(
           child: CircularProgressIndicator(color: colorScheme.primary),
         ),
@@ -28,14 +28,14 @@ class TimeLimitScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: r.hp(100),
             floating: true,
             pinned: true,
-            backgroundColor: colorScheme.background,
+            backgroundColor: colorScheme.surface,
             leading: IconButton(
               icon: Container(
                 padding: EdgeInsets.all(r.wp(8)),
@@ -43,12 +43,12 @@ class TimeLimitScreen extends StatelessWidget {
                   color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(r.radius(12)),
                   border: Border.all(
-                    color: colorScheme.outline.withOpacity(0.12),
+                    color: colorScheme.outline.withValues(alpha: 0.12),
                   ),
                 ),
                 child: Icon(
                   Icons.arrow_back_ios_new,
-                  color: colorScheme.onBackground,
+                  color: colorScheme.onSurface,
                   size: r.iconSize(18),
                 ),
               ),
@@ -59,7 +59,7 @@ class TimeLimitScreen extends StatelessWidget {
               title: Text(
                 'Time Limits',
                 style: TextStyle(
-                  color: colorScheme.onBackground,
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.w700,
                   fontSize: r.sp(22),
                   letterSpacing: -0.5,
@@ -88,7 +88,7 @@ class TimeLimitScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(r.radius(20)),
                   boxShadow: [
                     BoxShadow(
-                      color: colorScheme.primary.withOpacity(0.25),
+                      color: colorScheme.primary.withValues(alpha: 0.25),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -99,7 +99,7 @@ class TimeLimitScreen extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.all(r.wp(12)),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(r.radius(14)),
                       ),
                       child: Icon(
@@ -126,7 +126,7 @@ class TimeLimitScreen extends StatelessWidget {
                             'แตะที่เด็กเพื่อตั้งค่าเวลาจำกัดรายวัน',
                             style: TextStyle(
                               fontSize: r.sp(13),
-                              color: Colors.white.withOpacity(0.85),
+                              color: Colors.white.withValues(alpha: 0.85),
                             ),
                           ),
                         ],
@@ -166,7 +166,7 @@ class TimeLimitScreen extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.all(r.wp(24)),
                           decoration: BoxDecoration(
-                            color: colorScheme.tertiary.withOpacity(0.3),
+                            color: colorScheme.tertiary.withValues(alpha: 0.3),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -179,7 +179,7 @@ class TimeLimitScreen extends StatelessWidget {
                         Text(
                           'ยังไม่ได้เพิ่มเด็ก',
                           style: TextStyle(
-                            color: colorScheme.onBackground.withOpacity(0.5),
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
                             fontSize: r.sp(16),
                             fontWeight: FontWeight.w500,
                           ),
@@ -289,10 +289,10 @@ class _ChildListItemState extends State<_ChildListItem> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(r.radius(22)),
-        border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -345,7 +345,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                             label: 'ใช้งานวันนี้',
                             value: _formatDuration(totalUsage),
                             valueColor: colorScheme.primary,
-                            iconColor: colorScheme.primary.withOpacity(0.6),
+                            iconColor: colorScheme.primary.withValues(alpha: 0.6),
                           ),
                           SizedBox(height: r.hp(4)),
 
@@ -358,7 +358,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                               value:
                                   '${_formatDuration(limitUsed)} / ${_formatLimit(limit)}',
                               valueColor: progressColor,
-                              iconColor: progressColor.withOpacity(0.7),
+                              iconColor: progressColor.withValues(alpha: 0.7),
                             )
                           else
                             _buildStatRow(
@@ -366,10 +366,10 @@ class _ChildListItemState extends State<_ChildListItem> {
                               icon: Icons.all_inclusive_rounded,
                               label: 'ไม่ได้จำกัดเวลา',
                               value: '',
-                              valueColor: colorScheme.onSurface.withOpacity(
+                              valueColor: colorScheme.onSurface.withValues(alpha: 
                                 0.3,
                               ),
-                              iconColor: colorScheme.onSurface.withOpacity(0.3),
+                              iconColor: colorScheme.onSurface.withValues(alpha: 0.3),
                             ),
                         ],
                       ),
@@ -379,7 +379,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                     Container(
                       padding: EdgeInsets.all(r.wp(10)),
                       decoration: BoxDecoration(
-                        color: colorScheme.primary.withOpacity(0.08),
+                        color: colorScheme.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(r.radius(12)),
                       ),
                       child: Icon(
@@ -405,7 +405,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                     child: LinearProgressIndicator(
                       value: progress,
                       minHeight: r.hp(6),
-                      backgroundColor: colorScheme.outline.withOpacity(0.1),
+                      backgroundColor: colorScheme.outline.withValues(alpha: 0.1),
                       valueColor: AlwaysStoppedAnimation(progressColor),
                     ),
                   ),
@@ -417,7 +417,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                         '${(progress * 100).toInt()}% ใช้ไปแล้ว',
                         style: TextStyle(
                           fontSize: r.sp(11),
-                          color: colorScheme.onSurface.withOpacity(0.45),
+                          color: colorScheme.onSurface.withValues(alpha: 0.45),
                         ),
                       ),
                       Container(
@@ -426,7 +426,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                           vertical: r.hp(2),
                         ),
                         decoration: BoxDecoration(
-                          color: progressColor.withOpacity(0.1),
+                          color: progressColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(r.radius(6)),
                         ),
                         child: Text(
@@ -445,7 +445,7 @@ class _ChildListItemState extends State<_ChildListItem> {
             ),
 
           // Divider
-          Container(height: 1, color: colorScheme.outline.withOpacity(0.08)),
+          Container(height: 1, color: colorScheme.outline.withValues(alpha: 0.08)),
 
           // Reset button
           Padding(
@@ -511,7 +511,7 @@ class _ChildListItemState extends State<_ChildListItem> {
                 strokeWidth: 3,
                 backgroundColor: Colors.transparent,
                 valueColor: AlwaysStoppedAnimation(
-                  colorScheme.outline.withOpacity(0.1),
+                  colorScheme.outline.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -578,7 +578,7 @@ class _ChildListItemState extends State<_ChildListItem> {
           label,
           style: TextStyle(
             fontSize: r.sp(12),
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ),
         if (value.isNotEmpty) ...[
@@ -586,7 +586,7 @@ class _ChildListItemState extends State<_ChildListItem> {
             ': ',
             style: TextStyle(
               fontSize: r.sp(12),
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
             ),
           ),
           Flexible(
@@ -628,7 +628,7 @@ class _ChildListItemState extends State<_ChildListItem> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: colorScheme.primary.withOpacity(0.1),
+                color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
@@ -652,7 +652,7 @@ class _ChildListItemState extends State<_ChildListItem> {
           'Reset เวลา Limit ของ ${widget.child.name} เป็น 0 ใช่หรือไม่?\n\nเวลาใช้งานทั้งหมด (สถิติ) จะยังคงเดิม',
           style: TextStyle(
             fontSize: 14,
-            color: colorScheme.onSurface.withOpacity(0.6),
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
             height: 1.5,
           ),
         ),
@@ -661,7 +661,7 @@ class _ChildListItemState extends State<_ChildListItem> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'ยกเลิก',
-              style: TextStyle(color: colorScheme.onSurface.withOpacity(0.5)),
+              style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
             ),
           ),
           ElevatedButton(
@@ -779,7 +779,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
             width: r.wp(40),
             height: r.hp(4),
             decoration: BoxDecoration(
-              color: colorScheme.outline.withOpacity(0.2),
+              color: colorScheme.outline.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(r.radius(2)),
             ),
           ),
@@ -830,7 +830,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                       'ตั้งค่าเวลาจำกัดรายวัน',
                       style: TextStyle(
                         fontSize: r.sp(14),
-                        color: colorScheme.onSurface.withOpacity(0.5),
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
                       ),
                     ),
                   ],
@@ -846,7 +846,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
             height: r.hp(200),
             margin: EdgeInsets.symmetric(horizontal: r.wp(24)),
             decoration: BoxDecoration(
-              color: colorScheme.background,
+              color: colorScheme.surface,
               borderRadius: BorderRadius.circular(r.radius(20)),
             ),
             child: Stack(
@@ -859,11 +859,11 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                       color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(r.radius(14)),
                       border: Border.all(
-                        color: colorScheme.primary.withOpacity(0.2),
+                        color: colorScheme.primary.withValues(alpha: 0.2),
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: colorScheme.primary.withOpacity(0.08),
+                          color: colorScheme.primary.withValues(alpha: 0.08),
                           blurRadius: 10,
                           offset: const Offset(0, 2),
                         ),
@@ -901,7 +901,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                     Text(
                       'hr',
                       style: TextStyle(
-                        color: colorScheme.onSurface.withOpacity(0.4),
+                        color: colorScheme.onSurface.withValues(alpha: 0.4),
                         fontSize: r.sp(18),
                         fontWeight: FontWeight.w500,
                       ),
@@ -933,7 +933,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                     Text(
                       'min',
                       style: TextStyle(
-                        color: colorScheme.onSurface.withOpacity(0.4),
+                        color: colorScheme.onSurface.withValues(alpha: 0.4),
                         fontSize: r.sp(18),
                         fontWeight: FontWeight.w500,
                       ),
@@ -974,10 +974,10 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                     child: Container(
                       padding: EdgeInsets.symmetric(vertical: r.hp(16)),
                       decoration: BoxDecoration(
-                        color: colorScheme.background,
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(r.radius(14)),
                         border: Border.all(
-                          color: colorScheme.outline.withOpacity(0.15),
+                          color: colorScheme.outline.withValues(alpha: 0.15),
                         ),
                       ),
                       child: Center(
@@ -986,7 +986,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                           style: TextStyle(
                             fontSize: r.sp(16),
                             fontWeight: FontWeight.w600,
-                            color: colorScheme.onSurface.withOpacity(0.5),
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                       ),
@@ -1007,7 +1007,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                         borderRadius: BorderRadius.circular(r.radius(14)),
                         boxShadow: [
                           BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.3),
+                            color: colorScheme.primary.withValues(alpha: 0.3),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -1067,17 +1067,17 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                     colors: [colorScheme.primary, colorScheme.secondary],
                   )
                 : null,
-            color: isSelected ? null : colorScheme.background,
+            color: isSelected ? null : colorScheme.surface,
             borderRadius: BorderRadius.circular(r.radius(12)),
             border: Border.all(
               color: isSelected
                   ? Colors.transparent
-                  : colorScheme.outline.withOpacity(0.12),
+                  : colorScheme.outline.withValues(alpha: 0.12),
             ),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: colorScheme.primary.withOpacity(0.3),
+                      color: colorScheme.primary.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -1092,7 +1092,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                 fontWeight: FontWeight.w600,
                 color: isSelected
                     ? Colors.white
-                    : colorScheme.onSurface.withOpacity(0.6),
+                    : colorScheme.onSurface.withValues(alpha: 0.6),
               ),
             ),
           ),
@@ -1123,16 +1123,16 @@ class _TimePickerModalState extends State<_TimePickerModal> {
             end: Alignment.bottomRight,
             colors: isExceeding
                 ? [
-                    const Color(0xFFF59E0B).withOpacity(0.18),
-                    const Color(0xFFFBBF24).withOpacity(0.08),
+                    const Color(0xFFF59E0B).withValues(alpha: 0.18),
+                    const Color(0xFFFBBF24).withValues(alpha: 0.08),
                   ]
                 : gradientColors,
           ),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isExceeding
-                ? const Color(0xFFF59E0B).withOpacity(0.4)
-                : color.withOpacity(0.25),
+                ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
+                : color.withValues(alpha: 0.25),
             width: 1.5,
           ),
         ),
@@ -1145,7 +1145,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.15),
+                    color: color.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(Icons.public_rounded, color: color, size: 18),
@@ -1168,7 +1168,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                         'สำหรับเด็กอายุ ${recommendation.ageGroup}',
                         style: TextStyle(
                           fontSize: 11,
-                          color: colorScheme.onSurface.withOpacity(0.5),
+                          color: colorScheme.onSurface.withValues(alpha: 0.5),
                         ),
                       ),
                     ],
@@ -1180,7 +1180,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.12),
+                    color: color.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -1199,7 +1199,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -1229,7 +1229,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                           recommendation.details,
                           style: TextStyle(
                             fontSize: 12,
-                            color: colorScheme.onSurface.withOpacity(0.5),
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
                           ),
                         ),
                       ],
@@ -1247,7 +1247,7 @@ class _TimePickerModalState extends State<_TimePickerModal> {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF59E0B).withOpacity(0.12),
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(

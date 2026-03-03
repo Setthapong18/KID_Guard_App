@@ -22,13 +22,10 @@ class _SelectUserScreenState extends State<SelectUserScreen>
   bool _isCheckingAuth = true;
   bool _hasNavigated = false;
 
-  // Minimal Premium Colors
-  static const _primaryColor = Color(0xFF1A1A2E);
-  static const _accentColor = Color(0xFF6B9080);
   static const _parentAccent = Color(0xFF6B9080);
+  static const _accentColor = Color(0xFF6B9080);
   static const _childAccent = Color(0xFFE67E22);
   static const _bgColor = Color(0xFFFAFAFC);
-  static const _cardBg = Colors.white;
   static const _textPrimary = Color(0xFF1A1A2E);
   static const _textSecondary = Color(0xFF6B7280);
   static const _textMuted = Color(0xFF9CA3AF);
@@ -339,7 +336,7 @@ class _SelectUserScreenState extends State<SelectUserScreen>
         borderRadius: BorderRadius.circular(r.radius(24)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF779C85).withOpacity(0.25),
+            color: const Color(0xFF779C85).withValues(alpha: 0.25),
             blurRadius: 24,
             offset: const Offset(0, 12),
           ),
@@ -446,13 +443,13 @@ class _MinimalUserCardState extends State<_MinimalUserCard> {
             borderRadius: BorderRadius.circular(r.radius(20)),
             border: Border.all(
               color: _isPressed
-                  ? widget.accentColor.withOpacity(0.3)
+                  ? widget.accentColor.withValues(alpha: 0.3)
                   : const Color(0xFFF0F0F5),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 20,
                 offset: const Offset(0, 4),
               ),
@@ -465,7 +462,7 @@ class _MinimalUserCardState extends State<_MinimalUserCard> {
                 width: r.wp(52),
                 height: r.wp(52),
                 decoration: BoxDecoration(
-                  color: widget.accentColor.withOpacity(0.08),
+                  color: widget.accentColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(r.radius(16)),
                 ),
                 child: Icon(

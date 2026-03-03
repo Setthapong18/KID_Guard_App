@@ -221,7 +221,7 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
                               'ขอให้พ่อแม่ปลดล็อคได้นะ 🙏',
                               style: TextStyle(
                                 fontSize: isTablet ? 14 : 12,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -248,7 +248,7 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
             borderRadius: BorderRadius.circular(isTablet ? 32 : 26),
             boxShadow: [
               BoxShadow(
-                color: accentColor.withOpacity(_glowAnimation.value * 0.4),
+                color: accentColor.withValues(alpha: _glowAnimation.value * 0.4),
                 blurRadius: 40,
                 spreadRadius: 5,
               ),
@@ -268,13 +268,13 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      Colors.white.withOpacity(0.18),
-                      Colors.white.withOpacity(0.08),
+                      Colors.white.withValues(alpha: 0.18),
+                      Colors.white.withValues(alpha: 0.08),
                     ],
                   ),
                   borderRadius: BorderRadius.circular(isTablet ? 32 : 26),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     width: 1.5,
                   ),
                 ),
@@ -291,7 +291,7 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
                         height: 1.3,
                         shadows: [
                           Shadow(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.black.withValues(alpha: 0.2),
                             blurRadius: 10,
                           ),
                         ],
@@ -306,7 +306,7 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
                       _getSubtitle(),
                       style: TextStyle(
                         fontSize: isTablet ? 17 : 15,
-                        color: Colors.white.withOpacity(0.85),
+                        color: Colors.white.withValues(alpha: 0.85),
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.3,
                       ),
@@ -343,7 +343,7 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
                 ),
               ],
             ),
-            backgroundColor: accentColor.withOpacity(0.9),
+            backgroundColor: accentColor.withValues(alpha: 0.9),
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
@@ -362,12 +362,12 @@ class _FriendlyLockScreenState extends State<FriendlyLockScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [accentColor, accentColor.withOpacity(0.75)],
+            colors: [accentColor, accentColor.withValues(alpha: 0.75)],
           ),
           borderRadius: BorderRadius.circular(isTablet ? 24 : 20),
           boxShadow: [
             BoxShadow(
-              color: accentColor.withOpacity(0.45),
+              color: accentColor.withValues(alpha: 0.45),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

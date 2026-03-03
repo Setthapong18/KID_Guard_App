@@ -82,7 +82,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             type: 'system',
             category: 'system',
             iconName: 'check_circle_rounded',
-            colorValue: Colors.green.value,
+            colorValue: Colors.green.toARGB32(),
           ),
         );
       }
@@ -126,18 +126,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Send Feedback',
           style: TextStyle(
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -203,7 +203,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             Text(
               'ให้คะแนนแอพ',
               style: TextStyle(
-                color: colorScheme.onBackground.withValues(alpha: 0.6),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -256,7 +256,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             Text(
               'หมวดหมู่',
               style: TextStyle(
-                color: colorScheme.onBackground.withValues(alpha: 0.6),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -327,7 +327,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             Text(
               'ข้อความ',
               style: TextStyle(
-                color: colorScheme.onBackground.withValues(alpha: 0.6),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,

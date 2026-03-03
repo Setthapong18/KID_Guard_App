@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import '../../logic/providers/auth_provider.dart';
 import '../../data/models/child_model.dart';
+import 'package:device_apps/device_apps.dart';
 import '../../core/utils/responsive_helper.dart';
 
 // Extracted widgets
@@ -29,7 +32,10 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
   bool _showAllApps = false;
   late AnimationController _pulseController;
 
-  Future<Map<String, dynamic>>? _weeklyDataFuture;
+  final Map<String, String?> _appIconCache = {};
+
+  Map<String, dynamic>? _weeklyData;
+  bool _isLoadingChart = true;
   String? _lastFetchedChildId;
 
   static const _primaryGreen = Color(0xFF6B9080);
@@ -81,22 +87,29 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
   }
 
   Widget _buildAppAvatar(String name, String packageName, double size) {
+    // Fix legacy package names that came from Firestore keys (underscores instead of dots)
+    String cleanPackage = packageName;
+    if (!cleanPackage.contains('.') && cleanPackage.contains('_')) {
+      cleanPackage = cleanPackage.replaceAll('_', '.');
+    }
+
     final letter = name.isNotEmpty ? name[0].toUpperCase() : '?';
-    final colorIndex = packageName.hashCode.abs() % _avatarColors.length;
+    final colorIndex = cleanPackage.hashCode.abs() % _avatarColors.length;
     final color = _avatarColors[colorIndex];
-    return Container(
+
+    final fallbackWidget = Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color, color.withOpacity(0.7)],
+          colors: [color, color.withValues(alpha: 0.7)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(size * 0.3),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.25),
+            color: color.withValues(alpha: 0.25),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -113,13 +126,136 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
         ),
       ),
     );
+
+    return FutureBuilder<Uint8List?>(
+      future: _getAppIcon(cleanPackage),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data != null) {
+          return Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(size * 0.3),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(size * 0.3),
+              child: Image.memory(
+                snapshot.data!,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => fallbackWidget,
+              ),
+            ),
+          );
+        }
+        return fallbackWidget;
+      },
+    );
+  }
+
+  Future<Uint8List?> _getAppIcon(String packageName) async {
+    // 1. Check local cache first
+    if (_appIconCache.containsKey(packageName)) {
+      final base64String = _appIconCache[packageName];
+      if (base64String != null && base64String.isNotEmpty) {
+        try {
+          return base64Decode(base64String);
+        } catch (_) {}
+      }
+      return null;
+    }
+
+    // 2. Try the parent device (fast local lookup)
+    try {
+      final app = await DeviceApps.getApp(packageName, true);
+      if (app is ApplicationWithIcon && app.icon.isNotEmpty) {
+        return app.icon;
+      }
+    } catch (_) {}
+
+    // 3. Fallback: Fetch from child's synced apps in Firestore
+    // ignore: use_build_context_synchronously
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final parentUid = authProvider.userModel?.uid;
+    final childId = _selectedActivityChildId;
+
+    if (parentUid != null && childId != null) {
+      try {
+        final docId = packageName.replaceAll('.', '_');
+        final doc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(parentUid)
+            .collection('children')
+            .doc(childId)
+            .collection('apps')
+            .doc(docId)
+            .get();
+
+        if (doc.exists) {
+          final data = doc.data();
+          if (data != null && data.containsKey('iconBase64')) {
+            final iconBase64 = data['iconBase64'] as String?;
+            if (iconBase64 != null && iconBase64.isNotEmpty) {
+              _appIconCache[packageName] = iconBase64;
+              try {
+                return base64Decode(iconBase64);
+              } catch (e) {
+                debugPrint('Failed to decode base64 for $packageName: $e');
+              }
+            } else {
+              debugPrint('iconBase64 is empty for $packageName in Firestore');
+            }
+          } else {
+            debugPrint(
+              'No iconBase64 field for $packageName in Firestore. Child device needs to sync.',
+            );
+          }
+        } else {
+          debugPrint('Firestore doc $docId for $packageName does not exist.');
+        }
+      } catch (e) {
+        debugPrint('Firestore fetch error for $packageName: $e');
+      }
+    }
+
+    // Mark as not found to avoid future reads
+    _appIconCache[packageName] = null;
+    return null;
+  }
+
+  void _fetchWeeklyDataSilent(String parentUid, String childId) async {
+    try {
+      final data = await _fetchWeeklyData(parentUid, childId);
+      if (mounted && _selectedActivityChildId == childId) {
+        setState(() {
+          _weeklyData = data;
+          _isLoadingChart = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error silent fetching: $e');
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
-      if (mounted) setState(() {});
+    _refreshTimer = Timer.periodic(const Duration(seconds: 10), (_) {
+      if (mounted && _selectedActivityChildId != null) {
+        final authProvider = Provider.of<AuthProvider>(context, listen: false);
+        final parentUid = authProvider.userModel?.uid;
+        if (parentUid != null) {
+          _fetchWeeklyDataSilent(parentUid, _selectedActivityChildId!);
+        }
+      }
     });
     _pulseController = AnimationController(
       vsync: this,
@@ -144,7 +280,7 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
     }
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
@@ -181,7 +317,8 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
             return RefreshIndicator(
               onRefresh: () async {
                 setState(() {
-                  _weeklyDataFuture = null;
+                  _weeklyData = null;
+                  _isLoadingChart = true;
                   _lastFetchedChildId = null;
                 });
                 await Future.delayed(const Duration(milliseconds: 500));
@@ -225,13 +362,10 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
                         builder: (context) {
                           final parentUid = authProvider.userModel!.uid;
                           final childId = _selectedActivityChildId!;
-                          if (_weeklyDataFuture == null ||
-                              _lastFetchedChildId != childId) {
-                            _weeklyDataFuture = _fetchWeeklyData(
-                              parentUid,
-                              childId,
-                            );
+                          if (_lastFetchedChildId != childId) {
                             _lastFetchedChildId = childId;
+                            _isLoadingChart = true;
+                            _fetchWeeklyDataSilent(parentUid, childId);
                           }
                           return _buildChartSection(parentUid, childId);
                         },
@@ -258,13 +392,13 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
           Container(
             padding: EdgeInsets.all(r.wp(24)),
             decoration: BoxDecoration(
-              color: _primaryGreen.withOpacity(0.1),
+              color: _primaryGreen.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.child_care_rounded,
               size: r.iconSize(56),
-              color: _primaryGreen.withOpacity(0.5),
+              color: _primaryGreen.withValues(alpha: 0.5),
             ),
           ),
           SizedBox(height: r.hp(20)),
@@ -288,57 +422,50 @@ class _ParentActivityScreenState extends State<ParentActivityScreen>
 
   // ─── Chart + App Usage Section ──────────────────────────
   Widget _buildChartSection(String parentUid, String childId) {
-    return FutureBuilder<Map<String, dynamic>>(
-      future: _weeklyDataFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Container(
-            height: 200,
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.error_outline, color: Colors.red[300], size: 40),
-                const SizedBox(height: 8),
-                Text(
-                  'Error loading data',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 14),
-                ),
-              ],
+    if (_isLoadingChart && _weeklyData == null) {
+      return const SizedBox(
+        height: 200,
+        child: Center(child: CircularProgressIndicator(color: _primaryGreen)),
+      );
+    }
+
+    if (_weeklyData == null) {
+      return Container(
+        height: 200,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.error_outline, color: Colors.red[300], size: 40),
+            const SizedBox(height: 8),
+            Text(
+              'Error loading data',
+              style: TextStyle(color: Colors.grey[500], fontSize: 14),
             ),
-          );
-        }
+          ],
+        ),
+      );
+    }
 
-        if (!snapshot.hasData) {
-          return const SizedBox(
-            height: 200,
-            child: Center(
-              child: CircularProgressIndicator(color: _primaryGreen),
-            ),
-          );
-        }
+    final screenTimeMap = Map<String, double>.from(
+      _weeklyData!['screenTimeMap'] as Map,
+    );
+    final appsDataMap = Map<String, dynamic>.from(
+      _weeklyData!['appsDataMap'] as Map,
+    );
 
-        final screenTimeMap = Map<String, double>.from(
-          snapshot.data!['screenTimeMap'] as Map,
-        );
-        final appsDataMap = Map<String, dynamic>.from(
-          snapshot.data!['appsDataMap'] as Map,
-        );
-
-        return WeeklyChartWidget(
-          screenTimeMap: screenTimeMap,
-          appsDataMap: appsDataMap,
-          selectedBarIndex: _selectedBarIndex,
-          showAllApps: _showAllApps,
-          onBarSelected: (index) => setState(() {
-            _selectedBarIndex = index;
-            _showAllApps = false;
-          }),
-          onToggleShowAll: () => setState(() => _showAllApps = !_showAllApps),
-          buildAppAvatar: _buildAppAvatar,
-          isSystemApp: _isSystemApp,
-        );
-      },
+    return WeeklyChartWidget(
+      screenTimeMap: screenTimeMap,
+      appsDataMap: appsDataMap,
+      selectedBarIndex: _selectedBarIndex,
+      showAllApps: _showAllApps,
+      onBarSelected: (index) => setState(() {
+        _selectedBarIndex = index;
+        _showAllApps = false;
+      }),
+      onToggleShowAll: () => setState(() => _showAllApps = !_showAllApps),
+      buildAppAvatar: _buildAppAvatar,
+      isSystemApp: _isSystemApp,
     );
   }
 

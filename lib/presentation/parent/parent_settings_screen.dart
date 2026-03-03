@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +35,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
     final pin = user?.pin;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: CustomScrollView(
         slivers: [
           // Modern App Bar
@@ -45,7 +44,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
             floating: true,
             pinned: true,
             automaticallyImplyLeading: false,
-            backgroundColor: colorScheme.background,
+            backgroundColor: colorScheme.surface,
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(
                 left: ResponsiveHelper.of(context).wp(16),
@@ -54,7 +53,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
               title: Text(
                 AppLocalizations.of(context)!.settings,
                 style: TextStyle(
-                  color: colorScheme.onBackground,
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                   fontSize: ResponsiveHelper.of(context).sp(24),
                 ),
@@ -204,13 +203,13 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
           borderRadius: BorderRadius.circular(r.radius(32)),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.20),
+              color: colorScheme.primary.withValues(alpha: 0.20),
               blurRadius: 40,
               offset: const Offset(0, 16),
               spreadRadius: -8,
             ),
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.12),
+              color: colorScheme.primary.withValues(alpha: 0.12),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -223,13 +222,13 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   width: 2,
                 ),
               ),
               child: CircleAvatar(
                 radius: r.wp(32),
-                backgroundColor: Colors.white.withOpacity(0.2),
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
                 child: Text(
                   name.isNotEmpty ? name[0].toUpperCase() : '?',
                   style: TextStyle(
@@ -257,7 +256,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
                   Text(
                     email,
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontSize: r.sp(14),
                     ),
                   ),
@@ -268,7 +267,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
                       vertical: r.hp(4),
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(r.radius(12)),
                     ),
                     child: Row(
@@ -297,7 +296,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
               icon: Container(
                 padding: EdgeInsets.all(r.wp(8)),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Icon(
@@ -347,13 +346,13 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
           border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 20,
               offset: const Offset(0, 8),
               spreadRadius: -4,
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -402,7 +401,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(vertical: r.hp(20)),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(r.radius(16)),
               ),
               child: Center(
@@ -465,7 +464,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
       child: Text(
         title,
         style: TextStyle(
-          color: colorScheme.onBackground.withValues(alpha: 0.6),
+          color: colorScheme.onSurface.withValues(alpha: 0.6),
           fontSize: r.sp(13),
           fontWeight: FontWeight.w600,
           letterSpacing: 0.5,
@@ -492,7 +491,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
         border: Border.all(color: colorScheme.outline.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 8),
             spreadRadius: -4,
@@ -523,7 +522,7 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
                   leading: Container(
                     padding: EdgeInsets.all(r.wp(8)),
                     decoration: BoxDecoration(
-                      color: colorScheme.primaryContainer.withOpacity(0.5),
+                      color: colorScheme.primaryContainer.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(r.radius(10)),
                     ),
                     child: Icon(
@@ -584,15 +583,15 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.05),
+          color: Colors.red.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(r.radius(16)),
-          border: Border.all(color: Colors.red.withOpacity(0.2)),
+          border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
         ),
         child: ListTile(
           leading: Container(
             padding: EdgeInsets.all(r.wp(8)),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(r.radius(10)),
             ),
             child: Icon(Icons.logout, color: Colors.red, size: r.iconSize(22)),
@@ -608,14 +607,14 @@ class _ParentSettingsScreenState extends State<ParentSettingsScreen> {
           subtitle: Text(
             'Log out of your account',
             style: TextStyle(
-              color: Colors.red.withOpacity(0.7),
+              color: Colors.red.withValues(alpha: 0.7),
               fontSize: r.sp(12),
             ),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
             size: r.iconSize(14),
-            color: Colors.red.withOpacity(0.5),
+            color: Colors.red.withValues(alpha: 0.5),
           ),
           onTap: () async {
             await authProvider.signOut();
@@ -659,7 +658,7 @@ class _StatusDot extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: (isActive ? Colors.green : Colors.grey).withOpacity(0.1),
+        color: (isActive ? Colors.green : Colors.grey).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -715,10 +714,10 @@ class _PinDigit extends StatelessWidget {
         decoration: BoxDecoration(
           color: colorScheme.surface,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: colorScheme.primary.withOpacity(0.3)),
+          border: Border.all(color: colorScheme.primary.withValues(alpha: 0.3)),
           boxShadow: [
             BoxShadow(
-              color: colorScheme.primary.withOpacity(0.1),
+              color: colorScheme.primary.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

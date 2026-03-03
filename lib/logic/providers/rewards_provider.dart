@@ -1,5 +1,7 @@
 // ==================== Rewards Provider ====================
 /// จัดการ logic ของระบบ Rewards: เพิ่มคะแนน, แลกรางวัล, ดึงประวัติ, จัดการรางวัล custom
+library;
+
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../data/models/reward_model.dart';

@@ -82,7 +82,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
                   : AppLocalizations.of(context)!.createProfileDesc,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: colorScheme.onSurface.withOpacity(0.5),
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
                 fontSize: r.sp(14),
               ),
             ),
@@ -103,7 +103,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: _avatars.length,
-                separatorBuilder: (_, __) => SizedBox(width: r.wp(12)),
+                separatorBuilder: (context, index) => SizedBox(width: r.wp(12)),
                 itemBuilder: (context, index) {
                   final isSelected = _selectedAvatarIndex == index;
                   return GestureDetector(
@@ -124,7 +124,9 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: colorScheme.primary.withOpacity(0.25),
+                                  color: colorScheme.primary.withValues(
+                                    alpha: 0.25,
+                                  ),
                                   blurRadius: 16,
                                   offset: const Offset(0, 4),
                                 ),
@@ -133,7 +135,9 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
                       ),
                       child: CircleAvatar(
                         radius: r.wp(36),
-                        backgroundColor: colorScheme.tertiary.withOpacity(0.3),
+                        backgroundColor: colorScheme.tertiary.withValues(
+                          alpha: 0.3,
+                        ),
                         backgroundImage: AssetImage(_avatars[index]),
                       ),
                     ),
@@ -312,7 +316,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
             type: 'system',
             category: 'system',
             iconName: 'person_add_rounded',
-            colorValue: Colors.green.value,
+            colorValue: Colors.green.toARGB32(),
           ),
         );
       } else {
@@ -326,7 +330,7 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
             type: 'system',
             category: 'system',
             iconName: 'edit_rounded',
-            colorValue: Colors.blue.value,
+            colorValue: Colors.blue.toARGB32(),
           ),
         );
       }
@@ -368,7 +372,9 @@ class _ChildSetupScreenState extends State<ChildSetupScreen> {
       padding: EdgeInsets.all(r.wp(16)),
       decoration: BoxDecoration(
         color: isSelected
-            ? Theme.of(context).colorScheme.primaryContainer.withOpacity(0.5)
+            ? Theme.of(
+                context,
+              ).colorScheme.primaryContainer.withValues(alpha: 0.5)
             : Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(r.radius(12)),
         border: Border.all(

@@ -118,7 +118,7 @@ class _NotificationsSettingsScreenState
           type: 'system',
           category: 'system',
           iconName: 'settings_rounded',
-          colorValue: _accentColor.value,
+          colorValue: _accentColor.toARGB32(),
         ),
       );
     }
@@ -130,18 +130,18 @@ class _NotificationsSettingsScreenState
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Notifications',
           style: TextStyle(
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -291,7 +291,7 @@ class _NotificationsSettingsScreenState
     return Text(
       title,
       style: TextStyle(
-        color: colorScheme.onBackground.withValues(alpha: 0.6),
+        color: colorScheme.onSurface.withValues(alpha: 0.6),
         fontSize: 13,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
@@ -364,7 +364,7 @@ class _NotificationsSettingsScreenState
           Switch.adaptive(
             value: value,
             onChanged: onChanged,
-            activeColor: _accentColor,
+            activeThumbColor: _accentColor,
           ),
         ],
       ),

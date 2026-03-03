@@ -1,5 +1,7 @@
 // ==================== Time Limit Provider ====================
 /// จัดการ logic ของการจำกัดเวลาหน้าจอ: save limit, reset usage
+library;
+
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

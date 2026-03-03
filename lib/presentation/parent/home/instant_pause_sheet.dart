@@ -32,7 +32,7 @@ void showInstantPauseSheet(
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFEF4444).withOpacity(0.1),
+              color: const Color(0xFFEF4444).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(

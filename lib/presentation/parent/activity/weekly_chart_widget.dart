@@ -190,7 +190,7 @@ class WeeklyChartWidget extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -204,7 +204,7 @@ class WeeklyChartWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: _primaryGreen.withOpacity(0.1),
+                  color: _primaryGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
@@ -236,8 +236,9 @@ class WeeklyChartWidget extends StatelessWidget {
                   touchCallback: (FlTouchEvent event, barTouchResponse) {
                     if (!event.isInterestedForInteractions ||
                         barTouchResponse == null ||
-                        barTouchResponse.spot == null)
+                        barTouchResponse.spot == null) {
                       return;
+                    }
                     final spotIndex =
                         barTouchResponse.spot!.touchedBarGroupIndex;
                     if (selectedBarIndex != spotIndex) {
@@ -370,7 +371,7 @@ class WeeklyChartWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: _primaryGreen.withOpacity(0.1),
+                color: _primaryGreen.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -411,7 +412,7 @@ class WeeklyChartWidget extends StatelessWidget {
                   vertical: 5,
                 ),
                 decoration: BoxDecoration(
-                  color: _primaryGreen.withOpacity(0.1),
+                  color: _primaryGreen.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -511,7 +512,7 @@ class WeeklyChartWidget extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade100),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -605,7 +606,7 @@ class WeeklyChartWidget extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [_primaryGreen.withOpacity(0.05), Colors.transparent],
+          colors: [_primaryGreen.withValues(alpha: 0.05), Colors.transparent],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -640,7 +641,7 @@ class WeeklyChartWidget extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: _accentGreen.withOpacity(0.1),
+                        color: _accentGreen.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Text(
@@ -764,7 +765,7 @@ class WeeklyChartWidget extends StatelessWidget {
                         minHeight: 4,
                         backgroundColor: Colors.grey.shade100,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          color.withOpacity(0.7),
+                          color.withValues(alpha: 0.7),
                         ),
                       );
                     },

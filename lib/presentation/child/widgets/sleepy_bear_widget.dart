@@ -172,7 +172,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
   }
 
   Widget _buildCloud(double size) {
-    return Container(
+    return SizedBox(
       width: size * 1.3,
       height: size * 0.45,
       child: Stack(
@@ -189,14 +189,14 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.white.withOpacity(0.95),
-                    const Color(0xFFF0F4FF).withOpacity(0.9),
+                    Colors.white.withValues(alpha: 0.95),
+                    const Color(0xFFF0F4FF).withValues(alpha: 0.9),
                   ],
                 ),
                 borderRadius: BorderRadius.circular(size * 0.2),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFE8E0FF).withOpacity(0.5),
+                    color: const Color(0xFFE8E0FF).withValues(alpha: 0.5),
                     blurRadius: 20,
                     spreadRadius: 5,
                     offset: const Offset(0, 5),
@@ -213,7 +213,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
               width: size * 0.35,
               height: size * 0.28,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 shape: BoxShape.circle,
               ),
             ),
@@ -226,7 +226,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
               width: size * 0.32,
               height: size * 0.26,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 shape: BoxShape.circle,
               ),
             ),
@@ -239,7 +239,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
               width: size * 0.4,
               height: size * 0.32,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 shape: BoxShape.circle,
               ),
             ),
@@ -267,7 +267,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
             borderRadius: BorderRadius.circular(size * 0.22),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFD4A574).withOpacity(0.3),
+                color: const Color(0xFFD4A574).withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -300,7 +300,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
             borderRadius: BorderRadius.circular(size * 0.26),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFFD4A574).withOpacity(0.2),
+                color: const Color(0xFFD4A574).withValues(alpha: 0.2),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -383,7 +383,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
         ),
         shape: BoxShape.circle,
         border: Border.all(
-          color: const Color(0xFFD4A574).withOpacity(0.3),
+          color: const Color(0xFFD4A574).withValues(alpha: 0.3),
           width: 1,
         ),
       ),
@@ -418,11 +418,11 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
               width: size * 0.3,
               height: size * 0.3,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.95),
+                color: Colors.white.withValues(alpha: 0.95),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFE8E0FF).withOpacity(0.5),
+                    color: const Color(0xFFE8E0FF).withValues(alpha: 0.5),
                     blurRadius: 5,
                   ),
                 ],
@@ -477,7 +477,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
             width: size * 0.04,
             height: size * 0.015,
             decoration: BoxDecoration(
-              color: const Color(0xFF6B4F3C).withOpacity(0.5),
+              color: const Color(0xFF6B4F3C).withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(size * 0.01),
             ),
           ),
@@ -493,8 +493,8 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
       decoration: BoxDecoration(
         gradient: RadialGradient(
           colors: [
-            const Color(0xFFFFB6C1).withOpacity(0.6),
-            const Color(0xFFFFB6C1).withOpacity(0.0),
+            const Color(0xFFFFB6C1).withValues(alpha: 0.6),
+            const Color(0xFFFFB6C1).withValues(alpha: 0.0),
           ],
         ),
         borderRadius: BorderRadius.circular(size),
@@ -503,7 +503,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
   }
 
   Widget _buildHeartPillow(double size) {
-    return Container(
+    return SizedBox(
       width: size,
       height: size * 0.9,
       child: Icon(
@@ -512,7 +512,7 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
         color: const Color(0xFFFF8FAB),
         shadows: [
           Shadow(
-            color: const Color(0xFFFF6B8A).withOpacity(0.4),
+            color: const Color(0xFFFF6B8A).withValues(alpha: 0.4),
             blurRadius: 8,
           ),
         ],
@@ -586,11 +586,11 @@ class _SleepyBearWidgetState extends State<SleepyBearWidget>
                   fontStyle: FontStyle.italic,
                   shadows: [
                     Shadow(
-                      color: const Color(0xFFB8A0E8).withOpacity(0.8),
+                      color: const Color(0xFFB8A0E8).withValues(alpha: 0.8),
                       blurRadius: 8,
                     ),
                     Shadow(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       blurRadius: 15,
                     ),
                   ],
@@ -637,7 +637,7 @@ class _NightCapPainter extends CustomPainter {
 
     // Stripes on cap
     final stripePaint = Paint()
-      ..color = Colors.white.withOpacity(0.3)
+      ..color = Colors.white.withValues(alpha: 0.3)
       ..strokeWidth = 2
       ..style = PaintingStyle.stroke;
 
@@ -681,7 +681,7 @@ class _CurvyEyePainter extends CustomPainter {
 
     // Small eyelashes
     final lashPaint = Paint()
-      ..color = const Color(0xFF5D4037).withOpacity(0.6)
+      ..color = const Color(0xFF5D4037).withValues(alpha: 0.6)
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;

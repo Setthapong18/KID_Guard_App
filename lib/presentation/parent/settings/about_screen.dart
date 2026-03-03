@@ -51,7 +51,7 @@ class _AboutScreenState extends State<AboutScreen> {
     final r = ResponsiveHelper.of(context);
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -194,7 +194,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       'Smart Protection for Your Little Wonders',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: colorScheme.onBackground,
+                        color: colorScheme.onSurface,
                         fontSize: r.sp(16),
                         fontWeight: FontWeight.w600,
                       ),
@@ -208,7 +208,7 @@ class _AboutScreenState extends State<AboutScreen> {
                           : 'Keep your children safe in the digital world.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: colorScheme.onBackground.withValues(alpha: 0.6),
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
                         fontSize: r.sp(14),
                       ),
                     ),
@@ -359,7 +359,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             Text(
                               'Made with ',
                               style: TextStyle(
-                                color: colorScheme.onBackground.withValues(
+                                color: colorScheme.onSurface.withValues(
                                   alpha: 0.6,
                                 ),
                                 fontSize: r.sp(12),
@@ -373,7 +373,7 @@ class _AboutScreenState extends State<AboutScreen> {
                             Text(
                               ' in Thailand',
                               style: TextStyle(
-                                color: colorScheme.onBackground.withValues(
+                                color: colorScheme.onSurface.withValues(
                                   alpha: 0.6,
                                 ),
                                 fontSize: r.sp(12),
@@ -385,7 +385,7 @@ class _AboutScreenState extends State<AboutScreen> {
                         Text(
                           '© 2025 Kid Guard Solution. All rights reserved.',
                           style: TextStyle(
-                            color: colorScheme.onBackground.withValues(
+                            color: colorScheme.onSurface.withValues(
                               alpha: 0.4,
                             ),
                             fontSize: r.sp(10),
@@ -411,7 +411,7 @@ class _AboutScreenState extends State<AboutScreen> {
       child: Text(
         title.toUpperCase(),
         style: TextStyle(
-          color: colorScheme.onBackground.withValues(alpha: 0.6),
+          color: colorScheme.onSurface.withValues(alpha: 0.6),
           fontSize: 12,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.2,

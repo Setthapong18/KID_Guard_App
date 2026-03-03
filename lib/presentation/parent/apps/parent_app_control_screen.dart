@@ -302,7 +302,7 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
                   BoxShadow(
                     color: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.3),
+                    ).colorScheme.primary.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -432,14 +432,14 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
         borderRadius: BorderRadius.circular(r.radius(16)),
         border: Border.all(
           color: isBlocked
-              ? Colors.red.withOpacity(isSystemActive ? 0.3 : 0.1)
-              : Colors.green.withOpacity(isSystemActive ? 0.3 : 0.1),
+              ? Colors.red.withValues(alpha: isSystemActive ? 0.3 : 0.1)
+              : Colors.green.withValues(alpha: isSystemActive ? 0.3 : 0.1),
           width: 2,
         ),
         boxShadow: [
           if (isSystemActive)
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -469,8 +469,8 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
                   height: r.wp(56),
                   decoration: BoxDecoration(
                     color: isBlocked
-                        ? Colors.red.withOpacity(0.1)
-                        : Colors.green.withOpacity(0.1),
+                        ? Colors.red.withValues(alpha: 0.1)
+                        : Colors.green.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(r.radius(12)),
                   ),
                   child: app.iconBase64 != null
@@ -494,7 +494,7 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
                           Icons.android,
                           size: r.iconSize(32),
                           color: (isBlocked ? Colors.red : Colors.green)
-                              .withOpacity(isSystemActive ? 1.0 : 0.5),
+                              .withValues(alpha: isSystemActive ? 1.0 : 0.5),
                         ),
                 ),
                 SizedBox(width: r.wp(16)),
@@ -530,8 +530,8 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
                         ),
                         decoration: BoxDecoration(
                           color: isBlocked
-                              ? Colors.red.withOpacity(0.1)
-                              : Colors.green.withOpacity(0.1),
+                              ? Colors.red.withValues(alpha: 0.1)
+                              : Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(r.radius(6)),
                         ),
                         child: Row(
@@ -579,7 +579,7 @@ class _ParentAppControlScreenState extends State<ParentAppControlScreen> {
                             );
                           }
                         : null,
-                    activeColor: Colors.green,
+                    activeThumbColor: Colors.green,
                   ),
                 ),
               ],

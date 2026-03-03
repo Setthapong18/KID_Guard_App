@@ -1,5 +1,7 @@
 // ==================== Schedule Period Model ====================
 /// โมเดลสำหรับช่วงเวลาตาราง (เวลานอน / เวลาพัก)
+library;
+
 
 enum ScheduleType { sleep, quietTime }
 

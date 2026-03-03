@@ -350,12 +350,12 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
               decoration: InputDecoration(
                 hintText: '••••••',
                 hintStyle: TextStyle(
-                  color: _textSecondary.withOpacity(0.5),
+                  color: _textSecondary.withValues(alpha: 0.5),
                   letterSpacing: 8,
                 ),
                 counterText: '',
                 filled: true,
-                fillColor: _tertiaryColor.withOpacity(0.3),
+                fillColor: _tertiaryColor.withValues(alpha: 0.3),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                   borderSide: BorderSide.none,
@@ -668,9 +668,9 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
     final hours = seconds ~/ 3600;
     final minutes = (seconds % 3600) ~/ 60;
     if (hours > 0) {
-      return '${hours}ชม. ${minutes}น.';
+      return '$hoursชม. $minutesน.';
     }
-    return '${minutes}น.';
+    return '$minutesน.';
   }
 
   @override
@@ -791,13 +791,13 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
         borderRadius: BorderRadius.circular(r.radius(28)),
         boxShadow: [
           BoxShadow(
-            color: _primaryColor.withOpacity(0.25),
+            color: _primaryColor.withValues(alpha: 0.25),
             blurRadius: 30,
             offset: const Offset(0, 12),
             spreadRadius: -5,
           ),
           BoxShadow(
-            color: _primaryColor.withOpacity(0.10),
+            color: _primaryColor.withValues(alpha: 0.10),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -810,7 +810,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
             width: r.wp(56),
             height: r.wp(56),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(r.radius(16)),
             ),
             child: Icon(
@@ -828,7 +828,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
                 Text(
                   'แต้มสะสม',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
+                    color: Colors.white.withValues(alpha: 0.8),
                     fontSize: r.sp(14),
                     fontWeight: FontWeight.w500,
                   ),
@@ -859,7 +859,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
               vertical: r.hp(6),
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(r.radius(20)),
             ),
             child: Row(
@@ -901,18 +901,18 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
                 end: Alignment.bottomRight,
               )
             : null,
-        color: _isChildrenModeActive ? null : _tertiaryColor.withOpacity(0.5),
+        color: _isChildrenModeActive ? null : _tertiaryColor.withValues(alpha: 0.5),
         shape: BoxShape.circle,
         boxShadow: _isChildrenModeActive
             ? [
                 BoxShadow(
-                  color: _primaryColor.withOpacity(0.30),
+                  color: _primaryColor.withValues(alpha: 0.30),
                   blurRadius: 40,
                   offset: const Offset(0, 16),
                   spreadRadius: -8,
                 ),
                 BoxShadow(
-                  color: _primaryColor.withOpacity(0.15),
+                  color: _primaryColor.withValues(alpha: 0.15),
                   blurRadius: 16,
                   offset: const Offset(0, 6),
                 ),
@@ -944,7 +944,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
           boxShadow: _isChildrenModeActive
               ? [
                   BoxShadow(
-                    color: _primaryColor.withOpacity(0.35),
+                    color: _primaryColor.withValues(alpha: 0.35),
                     blurRadius: 20,
                     offset: const Offset(0, 8),
                   ),
@@ -983,12 +983,12 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
       padding: EdgeInsets.symmetric(horizontal: r.wp(20), vertical: r.hp(10)),
       decoration: BoxDecoration(
         color: _isChildrenModeActive
-            ? _successColor.withOpacity(0.1)
-            : _tertiaryColor.withOpacity(0.5),
+            ? _successColor.withValues(alpha: 0.1)
+            : _tertiaryColor.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(r.radius(24)),
         border: Border.all(
           color: _isChildrenModeActive
-              ? _successColor.withOpacity(0.3)
+              ? _successColor.withValues(alpha: 0.3)
               : _tertiaryColor,
           width: 1,
         ),
@@ -1041,7 +1041,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
             border: Border.all(color: _tertiaryColor),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
                 spreadRadius: -4,
@@ -1094,7 +1094,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
                   vertical: r.hp(6),
                 ),
                 decoration: BoxDecoration(
-                  color: _tertiaryColor.withOpacity(0.5),
+                  color: _tertiaryColor.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Row(
@@ -1140,14 +1140,14 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
               borderRadius: BorderRadius.circular(r.radius(24)),
               border: Border.all(
                 color: remainingTime < 1800
-                    ? const Color(0xFFEF4444).withOpacity(0.3)
+                    ? const Color(0xFFEF4444).withValues(alpha: 0.3)
                     : _tertiaryColor,
               ),
               boxShadow: [
                 BoxShadow(
                   color: remainingTime < 1800
-                      ? const Color(0xFFEF4444).withOpacity(0.08)
-                      : Colors.black.withOpacity(0.04),
+                      ? const Color(0xFFEF4444).withValues(alpha: 0.08)
+                      : Colors.black.withValues(alpha: 0.04),
                   blurRadius: 16,
                   offset: const Offset(0, 8),
                   spreadRadius: -4,
@@ -1163,7 +1163,7 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
                       padding: EdgeInsets.all(r.wp(12)),
                       decoration: BoxDecoration(
                         color: remainingTime < 1800
-                            ? const Color(0xFFEF4444).withOpacity(0.1)
+                            ? const Color(0xFFEF4444).withValues(alpha: 0.1)
                             : _tertiaryColor,
                         borderRadius: BorderRadius.circular(r.radius(14)),
                       ),

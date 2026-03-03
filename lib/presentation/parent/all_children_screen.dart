@@ -16,8 +16,9 @@ class AllChildrenScreen extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final r = ResponsiveHelper.of(context);
 
-    if (user == null)
+    if (user == null) {
       return const Scaffold(body: Center(child: Text('User not found')));
+    }
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6FBF4),
@@ -104,7 +105,7 @@ class AllChildrenScreen extends StatelessWidget {
           return ListView.separated(
             padding: EdgeInsets.all(r.wp(20)),
             itemCount: children.length,
-            separatorBuilder: (_, __) => SizedBox(height: r.hp(16)),
+            separatorBuilder: (context, index) => SizedBox(height: r.hp(16)),
             itemBuilder: (context, index) {
               final child = children[index];
               return _buildChildCard(context, child, colorScheme);
@@ -128,7 +129,7 @@ class AllChildrenScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(r.radius(20)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -141,12 +142,12 @@ class AllChildrenScreen extends StatelessWidget {
             width: r.wp(60),
             height: r.wp(60),
             decoration: BoxDecoration(
-              color: colorScheme.primaryContainer.withOpacity(0.5),
+              color: colorScheme.primaryContainer.withValues(alpha: 0.5),
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),

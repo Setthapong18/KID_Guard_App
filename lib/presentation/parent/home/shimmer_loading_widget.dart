@@ -43,8 +43,10 @@ class ShimmerLoadingWidget extends StatelessWidget {
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: 3,
-                    separatorBuilder: (_, __) => const SizedBox(width: 16),
-                    itemBuilder: (_, __) => _shimmerBox(140, 160, radius: 20),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 16),
+                    itemBuilder: (context, index) =>
+                        _shimmerBox(140, 160, radius: 20),
                   ),
                 ),
                 const SizedBox(height: 28),

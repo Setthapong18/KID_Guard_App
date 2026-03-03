@@ -125,8 +125,8 @@ class StatsRowWidget extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: isPrimary
-                ? _primaryGreen.withOpacity(0.2)
-                : Colors.black.withOpacity(0.04),
+                ? _primaryGreen.withValues(alpha: 0.2)
+                : Colors.black.withValues(alpha: 0.04),
             blurRadius: isPrimary ? 20 : 10,
             offset: const Offset(0, 6),
           ),
@@ -139,8 +139,8 @@ class StatsRowWidget extends StatelessWidget {
             padding: EdgeInsets.all(r.wp(6)),
             decoration: BoxDecoration(
               color: isPrimary
-                  ? Colors.white.withOpacity(0.2)
-                  : color.withOpacity(0.1),
+                  ? Colors.white.withValues(alpha: 0.2)
+                  : color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(r.radius(8)),
             ),
             child: Icon(

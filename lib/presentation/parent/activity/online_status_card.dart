@@ -45,14 +45,14 @@ class OnlineStatusCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(r.radius(20)),
         border: Border.all(
           color: isOnline
-              ? _accentGreen.withOpacity(0.3)
+              ? _accentGreen.withValues(alpha: 0.3)
               : Colors.grey.shade200,
         ),
         boxShadow: [
           BoxShadow(
             color: isOnline
-                ? _accentGreen.withOpacity(0.08)
-                : Colors.black.withOpacity(0.03),
+                ? _accentGreen.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.03),
             blurRadius: 16,
             offset: const Offset(0, 4),
           ),
@@ -105,7 +105,7 @@ class OnlineStatusCard extends StatelessWidget {
           height: r.wp(44),
           decoration: BoxDecoration(
             color: isOnline
-                ? _accentGreen.withOpacity(0.08 + pulseAnimation.value * 0.05)
+                ? _accentGreen.withValues(alpha: 0.08 + pulseAnimation.value * 0.05)
                 : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(r.radius(14)),
           ),
@@ -123,7 +123,7 @@ class OnlineStatusCard extends StatelessWidget {
                 boxShadow: isOnline
                     ? [
                         BoxShadow(
-                          color: _accentGreen.withOpacity(
+                          color: _accentGreen.withValues(alpha: 
                             0.4 - pulseAnimation.value * 0.2,
                           ),
                           blurRadius: 8,
@@ -143,7 +143,7 @@ class OnlineStatusCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: r.wp(10), vertical: r.hp(5)),
       decoration: BoxDecoration(
-        color: _accentGreen.withOpacity(0.1),
+        color: _accentGreen.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(r.radius(20)),
       ),
       child: Row(
@@ -178,7 +178,7 @@ class OnlineStatusCard extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: r.wp(12), vertical: r.hp(6)),
         decoration: BoxDecoration(
-          color: _primaryGreen.withOpacity(0.1),
+          color: _primaryGreen.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(r.radius(12)),
         ),
         child: Row(

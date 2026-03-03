@@ -75,7 +75,7 @@ void main() {
     });
 
     group('icon getter', () {
-      NotificationModel _makeNotif({String? iconName}) {
+      NotificationModel makeNotif({String? iconName}) {
         return NotificationModel(
           id: 'n',
           title: '',
@@ -88,55 +88,55 @@ void main() {
 
       test('returns correct icons for known names', () {
         expect(
-          _makeNotif(iconName: 'person_add_rounded').icon,
+          makeNotif(iconName: 'person_add_rounded').icon,
           Icons.person_add_rounded,
         );
         expect(
-          _makeNotif(iconName: 'settings_rounded').icon,
+          makeNotif(iconName: 'settings_rounded').icon,
           Icons.settings_rounded,
         );
         expect(
-          _makeNotif(iconName: 'warning_rounded').icon,
+          makeNotif(iconName: 'warning_rounded').icon,
           Icons.warning_rounded,
         );
         expect(
-          _makeNotif(iconName: 'check_circle_rounded').icon,
+          makeNotif(iconName: 'check_circle_rounded').icon,
           Icons.check_circle_rounded,
         );
-        expect(_makeNotif(iconName: 'edit_rounded').icon, Icons.edit_rounded);
+        expect(makeNotif(iconName: 'edit_rounded').icon, Icons.edit_rounded);
         expect(
-          _makeNotif(iconName: 'vpn_key_rounded').icon,
+          makeNotif(iconName: 'vpn_key_rounded').icon,
           Icons.vpn_key_rounded,
         );
         expect(
-          _makeNotif(iconName: 'schedule_rounded').icon,
+          makeNotif(iconName: 'schedule_rounded').icon,
           Icons.schedule_rounded,
         );
         expect(
-          _makeNotif(iconName: 'location_on_rounded').icon,
+          makeNotif(iconName: 'location_on_rounded').icon,
           Icons.location_on_rounded,
         );
-        expect(_makeNotif(iconName: 'block_rounded').icon, Icons.block_rounded);
+        expect(makeNotif(iconName: 'block_rounded').icon, Icons.block_rounded);
         expect(
-          _makeNotif(iconName: 'shield_rounded').icon,
+          makeNotif(iconName: 'shield_rounded').icon,
           Icons.shield_rounded,
         );
       });
 
       test('returns default icon for unknown name', () {
         expect(
-          _makeNotif(iconName: 'unknown_icon').icon,
+          makeNotif(iconName: 'unknown_icon').icon,
           Icons.notifications_rounded,
         );
       });
 
       test('returns default icon when iconName is null', () {
-        expect(_makeNotif(iconName: null).icon, Icons.notifications_rounded);
+        expect(makeNotif(iconName: null).icon, Icons.notifications_rounded);
       });
     });
 
     group('color getter', () {
-      NotificationModel _makeNotif({required String type, int? colorValue}) {
+      NotificationModel makeNotif({required String type, int? colorValue}) {
         return NotificationModel(
           id: 'n',
           title: '',
@@ -148,25 +148,25 @@ void main() {
       }
 
       test('uses colorValue when provided', () {
-        final notif = _makeNotif(type: 'system', colorValue: 0xFFABCDEF);
+        final notif = makeNotif(type: 'system', colorValue: 0xFFABCDEF);
         expect(notif.color, const Color(0xFFABCDEF));
       });
 
       test('returns red for alert type', () {
-        expect(_makeNotif(type: 'alert').color, Colors.red);
+        expect(makeNotif(type: 'alert').color, Colors.red);
       });
 
       test('returns orange for warning type', () {
-        expect(_makeNotif(type: 'warning').color, Colors.orange);
+        expect(makeNotif(type: 'warning').color, Colors.orange);
       });
 
       test('returns green for success type', () {
-        expect(_makeNotif(type: 'success').color, Colors.green);
+        expect(makeNotif(type: 'success').color, Colors.green);
       });
 
       test('returns blue for unknown/default type', () {
-        expect(_makeNotif(type: 'system').color, Colors.blue);
-        expect(_makeNotif(type: 'anything').color, Colors.blue);
+        expect(makeNotif(type: 'system').color, Colors.blue);
+        expect(makeNotif(type: 'anything').color, Colors.blue);
       });
     });
   });

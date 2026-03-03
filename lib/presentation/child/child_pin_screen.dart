@@ -173,7 +173,7 @@ class _ChildPinScreenState extends State<ChildPinScreen>
                           width: r.wp(64),
                           height: r.wp(64),
                           decoration: BoxDecoration(
-                            color: _primaryColor.withOpacity(0.1),
+                            color: _primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(r.radius(20)),
                           ),
                           child: Icon(

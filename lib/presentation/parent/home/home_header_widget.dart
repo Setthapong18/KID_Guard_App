@@ -72,7 +72,7 @@ class HomeHeaderWidget extends StatelessWidget {
                   border: Border.all(color: Colors.grey.shade100),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -119,8 +119,8 @@ class HomeHeaderWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(r.radius(16)),
               gradient: LinearGradient(
                 colors: [
-                  colorScheme.primary.withOpacity(0.8),
-                  colorScheme.tertiary.withOpacity(0.8),
+                  colorScheme.primary.withValues(alpha: 0.8),
+                  colorScheme.tertiary.withValues(alpha: 0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

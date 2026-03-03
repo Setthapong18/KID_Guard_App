@@ -28,7 +28,7 @@ class ActivityChildSelector extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: children.length,
-        separatorBuilder: (_, __) => SizedBox(width: r.wp(10)),
+        separatorBuilder: (context, index) => SizedBox(width: r.wp(10)),
         itemBuilder: (context, index) {
           final child = children[index];
           final isSelected = child.id == selectedChildId;
@@ -58,14 +58,14 @@ class ActivityChildSelector extends StatelessWidget {
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: _primaryGreen.withOpacity(0.3),
+                          color: _primaryGreen.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 4),
                         ),
                       ]
                     : [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.03),
+                          color: Colors.black.withValues(alpha: 0.03),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -78,8 +78,8 @@ class ActivityChildSelector extends StatelessWidget {
                       CircleAvatar(
                         radius: r.wp(15),
                         backgroundColor: isSelected
-                            ? Colors.white.withOpacity(0.25)
-                            : _primaryGreen.withOpacity(0.1),
+                            ? Colors.white.withValues(alpha: 0.25)
+                            : _primaryGreen.withValues(alpha: 0.1),
                         child: Text(
                           child.name[0].toUpperCase(),
                           style: TextStyle(

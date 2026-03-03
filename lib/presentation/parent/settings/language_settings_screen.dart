@@ -25,18 +25,18 @@ class LanguageSettingsScreen extends StatelessWidget {
     final selectedLanguage = localeProvider.languageCode;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onBackground),
+          icon: Icon(Icons.arrow_back_ios, color: colorScheme.onSurface),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           'Language',
           style: TextStyle(
-            color: colorScheme.onBackground,
+            color: colorScheme.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -102,7 +102,7 @@ class LanguageSettingsScreen extends StatelessWidget {
             Text(
               'เลือกภาษา',
               style: TextStyle(
-                color: colorScheme.onBackground.withValues(alpha: 0.6),
+                color: colorScheme.onSurface.withValues(alpha: 0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
@@ -181,7 +181,7 @@ class LanguageSettingsScreen extends StatelessWidget {
               type: 'system',
               category: 'system',
               iconName: 'settings_rounded',
-              colorValue: _accentColor.value,
+              colorValue: _accentColor.toARGB32(),
             ),
           );
         }

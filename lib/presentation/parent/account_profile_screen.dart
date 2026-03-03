@@ -125,7 +125,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             type: 'system',
             category: 'system',
             iconName: 'check_circle_rounded',
-            colorValue: Colors.blue.value,
+            colorValue: Colors.blue.toARGB32(),
           ),
         );
       }
@@ -192,7 +192,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
             type: 'alert',
             category: 'system',
             iconName: 'warning_rounded',
-            colorValue: Colors.red.value,
+            colorValue: Colors.red.toARGB32(),
           ),
         );
       }
@@ -267,7 +267,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                 border: Border.all(color: _borderColor, width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
+                    color: Colors.black.withValues(alpha: 0.04),
                     blurRadius: 12,
                     offset: const Offset(0, 2),
                   ),
@@ -312,7 +312,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: _primaryColor.withOpacity(0.3),
+                  color: _primaryColor.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -376,7 +376,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                     vertical: r.hp(6),
                   ),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.1),
+                    color: statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(r.radius(20)),
                   ),
                   child: Row(
@@ -434,7 +434,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -448,7 +448,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               Container(
                 padding: EdgeInsets.all(r.wp(10)),
                 decoration: BoxDecoration(
-                  color: _primaryColor.withOpacity(0.1),
+                  color: _primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Icon(
@@ -487,7 +487,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       vertical: r.hp(8),
                     ),
                     decoration: BoxDecoration(
-                      color: _primaryColor.withOpacity(0.1),
+                      color: _primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(r.radius(10)),
                     ),
                     child: Text(
@@ -577,7 +577,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                         borderRadius: BorderRadius.circular(r.radius(12)),
                         boxShadow: [
                           BoxShadow(
-                            color: _primaryColor.withOpacity(0.25),
+                            color: _primaryColor.withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -646,7 +646,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -660,7 +660,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               Container(
                 padding: EdgeInsets.all(r.wp(10)),
                 decoration: BoxDecoration(
-                  color: _textMuted.withOpacity(0.1),
+                  color: _textMuted.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Icon(
@@ -696,7 +696,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                   vertical: r.hp(6),
                 ),
                 decoration: BoxDecoration(
-                  color: _successColor.withOpacity(0.1),
+                  color: _successColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(r.radius(8)),
                 ),
                 child: Row(
@@ -759,7 +759,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
         border: Border.all(color: _borderColor),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -773,7 +773,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
               Container(
                 padding: EdgeInsets.all(r.wp(10)),
                 decoration: BoxDecoration(
-                  color: _primaryColor.withOpacity(0.1),
+                  color: _primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Icon(
@@ -812,7 +812,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                       vertical: r.hp(8),
                     ),
                     decoration: BoxDecoration(
-                      color: _primaryColor.withOpacity(0.1),
+                      color: _primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(r.radius(10)),
                     ),
                     child: Text(
@@ -896,7 +896,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                         borderRadius: BorderRadius.circular(r.radius(12)),
                         boxShadow: [
                           BoxShadow(
-                            color: _primaryColor.withOpacity(0.25),
+                            color: _primaryColor.withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),

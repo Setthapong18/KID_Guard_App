@@ -330,10 +330,14 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                           width: r.wp(80),
                           height: r.wp(80),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6B9080).withOpacity(0.1),
+                            color: const Color(
+                              0xFF6B9080,
+                            ).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(r.radius(20)),
                             border: Border.all(
-                              color: const Color(0xFF6B9080).withOpacity(0.3),
+                              color: const Color(
+                                0xFF6B9080,
+                              ).withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
@@ -389,7 +393,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                                   color: isSelected
                                       ? const Color(
                                           0xFF6B9080,
-                                        ).withOpacity(0.15)
+                                        ).withValues(alpha: 0.15)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(
                                     r.radius(10),
@@ -795,8 +799,8 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                                     // Child Avatar
                                     CircleAvatar(
                                       radius: r.wp(30),
-                                      backgroundColor: Colors.white.withOpacity(
-                                        0.2,
+                                      backgroundColor: Colors.white.withValues(
+                                        alpha: 0.2,
                                       ),
                                       backgroundImage:
                                           widget.child.avatar != null
@@ -926,7 +930,9 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                                       ),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.03),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.03,
+                                          ),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         ),
@@ -1008,7 +1014,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                           scrollDirection: Axis.horizontal,
                           clipBehavior: Clip.none,
                           itemCount: _getDefaultRewards(context).length,
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (context, index) =>
                               SizedBox(width: r.wp(12)),
                           itemBuilder: (context, index) {
                             final reward = _getDefaultRewards(context)[index];
@@ -1080,7 +1086,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                             border: Border.all(color: Colors.grey.shade200),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.03),
+                                color: Colors.black.withValues(alpha: 0.03),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -1112,7 +1118,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                             scrollDirection: Axis.horizontal,
                             clipBehavior: Clip.none,
                             itemCount: rewardsProvider.customRewards.length,
-                            separatorBuilder: (_, __) =>
+                            separatorBuilder: (context, index) =>
                                 SizedBox(width: r.wp(12)),
                             itemBuilder: (context, index) {
                               final reward =
@@ -1182,7 +1188,9 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                               shape: BoxShape.circle,
                             ),
                             todayDecoration: BoxDecoration(
-                              color: const Color(0xFF6B9080).withOpacity(0.3),
+                              color: const Color(
+                                0xFF6B9080,
+                              ).withValues(alpha: 0.3),
                               shape: BoxShape.circle,
                             ),
                             markerDecoration: const BoxDecoration(
@@ -1262,14 +1270,14 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
           border: Border.all(
             color: canAfford
                 ? isCustom
-                      ? const Color(0xFF6B9080).withOpacity(0.5)
-                      : const Color(0xFF6B9080).withOpacity(0.3)
+                      ? const Color(0xFF6B9080).withValues(alpha: 0.5)
+                      : const Color(0xFF6B9080).withValues(alpha: 0.3)
                 : Colors.grey.shade200,
           ),
           boxShadow: isCustom
               ? [
                   BoxShadow(
-                    color: const Color(0xFF6B9080).withOpacity(0.08),
+                    color: const Color(0xFF6B9080).withValues(alpha: 0.08),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -1312,7 +1320,7 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
               ),
               decoration: BoxDecoration(
                 color: canAfford
-                    ? const Color(0xFF6B9080).withOpacity(0.1)
+                    ? const Color(0xFF6B9080).withValues(alpha: 0.1)
                     : Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(r.radius(8)),
               ),
@@ -1391,8 +1399,8 @@ class _ParentRewardsScreenState extends State<ParentRewardsScreen> {
                 padding: EdgeInsets.all(r.wp(10)),
                 decoration: BoxDecoration(
                   color: isEarn
-                      ? const Color(0xFF10B981).withOpacity(0.1)
-                      : Colors.orange.withOpacity(0.1),
+                      ? const Color(0xFF10B981).withValues(alpha: 0.1)
+                      : Colors.orange.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(r.radius(12)),
                 ),
                 child: Icon(
