@@ -30,11 +30,9 @@ subprojects {
 }
 
 subprojects {
-    // ใช้ plugins.withId แทน afterEvaluate เพื่อป้องกัน Error "already evaluated"
     plugins.withId("com.android.library") {
         extensions.configure<com.android.build.gradle.BaseExtension> {
             if (namespace == null) {
-                // ถ้าไม่มี namespace ให้เอา group id มาใส่แทน
                 namespace = project.group.toString()
             }
         }

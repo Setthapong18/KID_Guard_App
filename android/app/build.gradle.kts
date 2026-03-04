@@ -33,7 +33,7 @@ android {
         release {
             // Enable code obfuscation and minification
             isMinifyEnabled = true
-            isShrinkResources = true
+            isShrinkResources = false // Temporarily disabled to prevent AAPT resource linker errors
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
