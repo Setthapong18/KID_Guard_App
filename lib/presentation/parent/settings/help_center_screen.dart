@@ -125,41 +125,6 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
 
             const SizedBox(height: 28),
 
-            // Search (Visual only)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.search,
-                    color: colorScheme.onSurface.withValues(alpha: 0.4),
-                    size: 22,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    'ค้นหาคำถาม...',
-                    style: TextStyle(
-                      color: colorScheme.onSurface.withValues(alpha: 0.4),
-                      fontSize: 15,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 28),
-
             // FAQ Section
             Text(
               'คำถามที่พบบ่อย',
@@ -240,7 +205,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                                 duration: const Duration(milliseconds: 200),
                                 child: Icon(
                                   Icons.keyboard_arrow_down,
-                                  color: colorScheme.onSurface.withValues(alpha: 0.3),
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.3,
+                                  ),
                                 ),
                               ),
                             ],
@@ -252,7 +219,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
                               child: Text(
                                 faq['answer']!,
                                 style: TextStyle(
-                                  color: colorScheme.onSurface.withValues(alpha: 0.6),
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
                                   fontSize: 13,
                                   height: 1.6,
                                 ),
@@ -279,7 +248,9 @@ class _HelpCenterScreenState extends State<HelpCenterScreen> {
               decoration: BoxDecoration(
                 color: colorScheme.primary.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: colorScheme.primary.withValues(alpha: 0.2)),
+                border: Border.all(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                ),
               ),
               child: Row(
                 children: [

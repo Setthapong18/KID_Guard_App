@@ -249,11 +249,16 @@ class _LoginScreenState extends State<LoginScreen>
                     ),
                   );
                 }
-              } on FirebaseAuthException catch (e) {
+              } catch (e) {
+                debugPrint('Password reset error: $e');
                 if (mounted) {
                   String msg = 'เกิดข้อผิดพลาด กรุณาลองใหม่';
-                  if (e.code == 'user-not-found') {
-                    msg = 'ไม่พบบัญชีที่ใช้อีเมลนี้';
+                  if (e is FirebaseAuthException) {
+                    if (e.code == 'user-not-found') {
+                      msg = 'ไม่พบบัญชีที่ใช้อีเมลนี้';
+                    } else {
+                      msg = e.message ?? 'เกิดข้อผิดพลาด กรุณาลองใหม่';
+                    }
                   }
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -265,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen>
                             size: 18,
                           ),
                           const SizedBox(width: 12),
-                          Text(msg),
+                          Expanded(child: Text(msg)),
                         ],
                       ),
                       backgroundColor: const Color(0xFFEF4444),

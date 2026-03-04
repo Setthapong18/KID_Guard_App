@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import '../../../core/utils/responsive_helper.dart';
 
 class AboutScreen extends StatefulWidget {
@@ -30,17 +30,6 @@ class _AboutScreenState extends State<AboutScreen> {
       });
     } catch (e) {
       debugPrint('Error loading package info: $e');
-    }
-  }
-
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (!await launchUrl(uri)) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Could not launch URL')));
-      }
     }
   }
 
@@ -319,24 +308,11 @@ class _AboutScreenState extends State<AboutScreen> {
                   _buildClassicCard([
                     _buildNavRow(
                       context,
-                      icon: Icons.privacy_tip_outlined,
-                      title: 'Privacy Policy',
-                      onTap: () =>
-                          _launchUrl('https://kidguard-app.web.app/privacy'),
-                    ),
-                    _buildDivider(context),
-                    _buildNavRow(
-                      context,
-                      icon: Icons.description_outlined,
-                      title: 'Terms of Service',
-                      onTap: () =>
-                          _launchUrl('https://kidguard-app.web.app/terms'),
-                    ),
-                    _buildDivider(context),
-                    _buildNavRow(
-                      context,
                       icon: Icons.integration_instructions_outlined,
-                      title: 'Open Source Licenses',
+                      title:
+                          Localizations.localeOf(context).languageCode == 'th'
+                          ? 'ใบอนุญาตโอเพนซอร์ซ'
+                          : 'Open Source Licenses',
                       onTap: () {
                         showLicensePage(
                           context: context,
@@ -385,9 +361,7 @@ class _AboutScreenState extends State<AboutScreen> {
                         Text(
                           '© 2025 Kid Guard Solution. All rights reserved.',
                           style: TextStyle(
-                            color: colorScheme.onSurface.withValues(
-                              alpha: 0.4,
-                            ),
+                            color: colorScheme.onSurface.withValues(alpha: 0.4),
                             fontSize: r.sp(10),
                           ),
                         ),
@@ -583,15 +557,6 @@ class _AboutScreenState extends State<AboutScreen> {
       ),
       onTap: onTap,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    );
-  }
-
-  Widget _buildDivider(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Divider(
-      height: 1,
-      indent: 54,
-      color: colorScheme.outline.withValues(alpha: 0.1),
     );
   }
 }
