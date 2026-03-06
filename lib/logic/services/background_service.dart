@@ -422,9 +422,12 @@ class BackgroundService {
           !_isDeviceLocked &&
           _dailyTimeLimit > 0 &&
           _currentLimitUsedTime >= _dailyTimeLimit) {
-        // Set local flags immediately to prevent re-triggering next tick
+        // Set local flag immediately to prevent re-triggering next tick
+        // NOTE: Do NOT set _isInRestrictedTime here — that flag is for
+        // schedule-based restrictions (sleep/quiet/pause) only.
+        // Using it here caused the schedule-exit logic to auto-unlock
+        // the time-limit lock on the very next tick, creating a loop.
         _isDeviceLocked = true;
-        _isInRestrictedTime = true;
         // Set isLocked in Firestore so parent can see unlock button
         _setLockedInFirestore(true, 'time_limit');
         onTimeLimitReached();
@@ -482,8 +485,8 @@ class BackgroundService {
   }
 
   Future<void> _updateScreenTime() async {
-    // Don't count screen time during restricted periods
-    if (_isInRestrictedTime) return;
+    // Don't count screen time during restricted periods or time-limit lock
+    if (_isInRestrictedTime || _isDeviceLocked) return;
 
     if (_currentChildId == null || _currentParentId == null) return;
 

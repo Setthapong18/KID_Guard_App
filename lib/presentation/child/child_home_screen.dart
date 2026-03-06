@@ -437,7 +437,11 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
           .doc(user.uid)
           .collection('children')
           .doc(child.id)
-          .update({'dailyTimeLimit': FieldValue.increment(3600)});
+          .update({
+            'dailyTimeLimit': FieldValue.increment(3600),
+            'isLocked': false,
+            'lockReason': '',
+          });
 
       OverlayService().hideOverlay();
 
@@ -901,7 +905,9 @@ class _ChildHomeScreenState extends State<ChildHomeScreen>
                 end: Alignment.bottomRight,
               )
             : null,
-        color: _isChildrenModeActive ? null : _tertiaryColor.withValues(alpha: 0.5),
+        color: _isChildrenModeActive
+            ? null
+            : _tertiaryColor.withValues(alpha: 0.5),
         shape: BoxShape.circle,
         boxShadow: _isChildrenModeActive
             ? [
