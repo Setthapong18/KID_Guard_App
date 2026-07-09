@@ -1,0 +1,1302 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../logic/providers/auth_provider.dart';
+import '../../logic/providers/time_limit_provider.dart';
+import '../../data/models/child_model.dart';
+import '../../core/utils/who_guidelines.dart';
+import '../../core/utils/responsive_helper.dart';
+import '../../core/widgets/empty_state_widget.dart';
+import '../../core/widgets/shimmer_loading.dart';
+
+class TimeLimitScreen extends StatelessWidget {
+  const TimeLimitScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.userModel;
+    final r = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (user == null) {
+      return Scaffold(
+        backgroundColor: colorScheme.surface,
+        body: Center(
+          child: CircularProgressIndicator(color: colorScheme.primary),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: colorScheme.surface,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: r.hp(100),
+            floating: true,
+            pinned: true,
+            backgroundColor: colorScheme.surface,
+            leading: IconButton(
+              icon: Container(
+                padding: EdgeInsets.all(r.wp(8)),
+                decoration: BoxDecoration(
+                  color: colorScheme.surface,
+                  borderRadius: BorderRadius.circular(r.radius(12)),
+                  border: Border.all(
+                    color: colorScheme.outline.withValues(alpha: 0.12),
+                  ),
+                ),
+                child: Icon(
+                  Icons.arrow_back_ios_new,
+                  color: colorScheme.onSurface,
+                  size: r.iconSize(18),
+                ),
+              ),
+              onPressed: () => Navigator.pop(context),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: EdgeInsets.only(left: r.wp(60), bottom: r.hp(16)),
+              title: Text(
+                'Time Limits',
+                style: TextStyle(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                  fontSize: r.sp(22),
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+          ),
+
+          // Header info card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                r.wp(20),
+                r.hp(8),
+                r.wp(20),
+                r.hp(24),
+              ),
+              child: Container(
+                padding: EdgeInsets.all(r.wp(18)),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [colorScheme.primary, colorScheme.secondary],
+                  ),
+                  borderRadius: BorderRadius.circular(r.radius(20)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.25),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(r.wp(12)),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(r.radius(14)),
+                      ),
+                      child: Icon(
+                        Icons.timer_outlined,
+                        color: Colors.white,
+                        size: r.iconSize(24),
+                      ),
+                    ),
+                    SizedBox(width: r.wp(16)),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Daily Screen Time',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: r.sp(16),
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: r.hp(4)),
+                          Text(
+                            'แตะที่เด็กเพื่อตั้งค่าเวลาจำกัดรายวัน',
+                            style: TextStyle(
+                              fontSize: r.sp(13),
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Children List
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .collection('children')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return SliverPadding(
+                  padding: EdgeInsets.all(r.wp(20)),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      List.generate(3, (_) => Padding(
+                        padding: EdgeInsets.only(bottom: r.hp(16)),
+                        child: ShimmerCard(height: 120, hasAvatar: false),
+                      )),
+                    ),
+                  ),
+                );
+              }
+
+              final childrenDocs = snapshot.data!.docs;
+              if (childrenDocs.isEmpty) {
+                return const SliverFillRemaining(
+                  child: EmptyStateWidget(
+                    icon: Icons.timer_rounded,
+                    title: 'ยังไม่ได้เพิ่มเด็ก',
+                    subtitle: 'เพิ่มโปรไฟล์ลูกก่อนเพื่อตั้งเวลาใช้งานที่เหมาะสม',
+                  ),
+                );
+              }
+
+              final children = childrenDocs
+                  .map(
+                    (doc) => ChildModel.fromMap(
+                      doc.data()! as Map<String, dynamic>,
+                      doc.id,
+                    ),
+                  )
+                  .toList();
+
+              return SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: r.wp(20)),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    return TweenAnimationBuilder<double>(
+                      tween: Tween(begin: 0, end: 1),
+                      duration: Duration(milliseconds: 300 + (index * 80)),
+                      curve: Curves.easeOutCubic,
+                      builder: (context, value, child) {
+                        return Opacity(
+                          opacity: value,
+                          child: Transform.translate(
+                            offset: Offset(0, 20 * (1 - value)),
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: _ChildListItem(
+                        child: children[index],
+                        parentId: user.uid,
+                      ),
+                    );
+                  }, childCount: children.length),
+                ),
+              );
+            },
+          ),
+
+          // Bottom padding
+          const SliverToBoxAdapter(child: SizedBox(height: 40)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChildListItem extends StatefulWidget {
+  final ChildModel child;
+  final String parentId;
+
+  const _ChildListItem({required this.child, required this.parentId});
+
+  @override
+  State<_ChildListItem> createState() => _ChildListItemState();
+}
+
+class _ChildListItemState extends State<_ChildListItem> {
+  String _formatDuration(int seconds) {
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    if (hours > 0) {
+      return minutes > 0 ? '${hours}h ${minutes}m' : '${hours}h';
+    }
+    if (minutes > 0) return '${minutes}m';
+    return '0m';
+  }
+
+  String _formatLimit(int seconds) {
+    if (seconds == 0) return 'ไม่จำกัด';
+    final hours = seconds ~/ 3600;
+    final minutes = (seconds % 3600) ~/ 60;
+    if (hours > 0) {
+      return minutes > 0 ? '$hours ชม. $minutes น.' : '$hours ชม.';
+    }
+    return '$minutes นาที';
+  }
+
+  Color _getProgressColor(double progress) {
+    if (progress >= 1) return const Color(0xFFEF4444);
+    if (progress >= 0.8) return const Color(0xFFF59E0B);
+    return const Color(0xFF10B981);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final r = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final totalUsage = widget.child.screenTime;
+    final limitUsed = widget.child.limitUsedTime;
+    final limit = widget.child.dailyTimeLimit;
+    final progress = limit > 0 ? (limitUsed / limit).clamp(0.0, 1.0) : 0.0;
+    final progressColor = limit > 0
+        ? _getProgressColor(limitUsed / limit)
+        : colorScheme.primary;
+
+    return Container(
+      margin: EdgeInsets.only(bottom: r.hp(14)),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(r.radius(22)),
+        border: Border.all(color: colorScheme.outline.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Main content - tappable area
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(r.radius(22)),
+                bottom: limit > 0 ? Radius.zero : Radius.circular(r.radius(22)),
+              ),
+              onTap: () => _showTimePicker(context),
+              child: Padding(
+                padding: EdgeInsets.all(r.wp(18)),
+                child: Row(
+                  children: [
+                    // Avatar with progress ring
+                    _buildAvatarWithProgress(
+                      r,
+                      colorScheme,
+                      progress,
+                      progressColor,
+                      limit,
+                    ),
+                    SizedBox(width: r.wp(16)),
+
+                    // Child info
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.child.name,
+                            style: TextStyle(
+                              fontSize: r.sp(17),
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.onSurface,
+                            ),
+                          ),
+                          SizedBox(height: r.hp(8)),
+
+                          // Usage stat
+                          _buildStatRow(
+                            r,
+                            icon: Icons.bar_chart_rounded,
+                            label: 'ใช้งานวันนี้',
+                            value: _formatDuration(totalUsage),
+                            valueColor: colorScheme.primary,
+                            iconColor: colorScheme.primary.withValues(alpha: 0.6),
+                          ),
+                          SizedBox(height: r.hp(4)),
+
+                          // Limit stat
+                          if (limit > 0)
+                            _buildStatRow(
+                              r,
+                              icon: Icons.timer_outlined,
+                              label: 'Limit',
+                              value:
+                                  '${_formatDuration(limitUsed)} / ${_formatLimit(limit)}',
+                              valueColor: progressColor,
+                              iconColor: progressColor.withValues(alpha: 0.7),
+                            )
+                          else
+                            _buildStatRow(
+                              r,
+                              icon: Icons.all_inclusive_rounded,
+                              label: 'ไม่ได้จำกัดเวลา',
+                              value: '',
+                              valueColor: colorScheme.onSurface.withValues(alpha: 
+                                0.3,
+                              ),
+                              iconColor: colorScheme.onSurface.withValues(alpha: 0.3),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    // Edit icon
+                    Container(
+                      padding: EdgeInsets.all(r.wp(10)),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(r.radius(12)),
+                      ),
+                      child: Icon(
+                        Icons.edit_outlined,
+                        color: colorScheme.primary,
+                        size: r.iconSize(18),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Progress bar (only when limit is set)
+          if (limit > 0)
+            Padding(
+              padding: EdgeInsets.fromLTRB(r.wp(18), 0, r.wp(18), r.hp(12)),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(r.radius(6)),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: r.hp(6),
+                      backgroundColor: colorScheme.outline.withValues(alpha: 0.1),
+                      valueColor: AlwaysStoppedAnimation(progressColor),
+                    ),
+                  ),
+                  SizedBox(height: r.hp(8)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${(progress * 100).toInt()}% ใช้ไปแล้ว',
+                        style: TextStyle(
+                          fontSize: r.sp(11),
+                          color: colorScheme.onSurface.withValues(alpha: 0.45),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: r.wp(8),
+                          vertical: r.hp(2),
+                        ),
+                        decoration: BoxDecoration(
+                          color: progressColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(r.radius(6)),
+                        ),
+                        child: Text(
+                          'เหลือ ${_formatDuration(limit - limitUsed > 0 ? limit - limitUsed : 0)}',
+                          style: TextStyle(
+                            fontSize: r.sp(11),
+                            fontWeight: FontWeight.w600,
+                            color: progressColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+          // Divider
+          Container(height: 1, color: colorScheme.outline.withValues(alpha: 0.08)),
+
+          // Reset button
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: r.wp(8),
+              vertical: r.hp(4),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(r.radius(10)),
+                onTap: () => _showResetConfirmation(context),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: r.hp(10)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.refresh_rounded,
+                        size: r.iconSize(16),
+                        color: colorScheme.primary,
+                      ),
+                      SizedBox(width: r.wp(6)),
+                      Text(
+                        'Reset เวลา Limit',
+                        style: TextStyle(
+                          fontSize: r.sp(13),
+                          fontWeight: FontWeight.w500,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAvatarWithProgress(
+    ResponsiveHelper r,
+    ColorScheme colorScheme,
+    double progress,
+    Color progressColor,
+    int limit,
+  ) {
+    return SizedBox(
+      width: r.wp(56),
+      height: r.wp(56),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Progress ring background
+          if (limit > 0)
+            SizedBox(
+              width: r.wp(56),
+              height: r.wp(56),
+              child: CircularProgressIndicator(
+                value: 1,
+                strokeWidth: 3,
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation(
+                  colorScheme.outline.withValues(alpha: 0.1),
+                ),
+              ),
+            ),
+          // Progress ring
+          if (limit > 0)
+            SizedBox(
+              width: r.wp(56),
+              height: r.wp(56),
+              child: CircularProgressIndicator(
+                value: progress,
+                strokeWidth: 3,
+                backgroundColor: Colors.transparent,
+                valueColor: AlwaysStoppedAnimation(progressColor),
+                strokeCap: StrokeCap.round,
+              ),
+            ),
+          // Avatar
+          Container(
+            padding: EdgeInsets.all(r.wp(2)),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: limit > 0
+                  ? null
+                  : LinearGradient(
+                      colors: [colorScheme.primary, colorScheme.secondary],
+                    ),
+            ),
+            child: CircleAvatar(
+              radius: limit > 0 ? r.wp(22) : r.wp(24),
+              backgroundColor: Colors.white,
+              backgroundImage: widget.child.avatar != null
+                  ? AssetImage(widget.child.avatar!)
+                  : null,
+              child: widget.child.avatar == null
+                  ? Text(
+                      widget.child.name[0].toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: r.sp(18),
+                        color: colorScheme.primary,
+                      ),
+                    )
+                  : null,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatRow(
+    ResponsiveHelper r, {
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color valueColor,
+    required Color iconColor,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: r.iconSize(14), color: iconColor),
+        SizedBox(width: r.wp(5)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: r.sp(12),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+          ),
+        ),
+        if (value.isNotEmpty) ...[
+          Text(
+            ': ',
+            style: TextStyle(
+              fontSize: r.sp(12),
+              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: r.sp(12),
+                fontWeight: FontWeight.w600,
+                color: valueColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _showTimePicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) =>
+          _TimePickerModal(child: widget.child, parentId: widget.parentId),
+    );
+  }
+
+  void _showResetConfirmation(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.refresh_rounded,
+                color: colorScheme.primary,
+                size: 20,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'Reset เวลา?',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Reset เวลา Limit ของ ${widget.child.name} เป็น 0 ใช่หรือไม่?\n\nเวลาใช้งานทั้งหมด (สถิติ) จะยังคงเดิม',
+          style: TextStyle(
+            fontSize: 14,
+            color: colorScheme.onSurface.withValues(alpha: 0.6),
+            height: 1.5,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'ยกเลิก',
+              style: TextStyle(color: colorScheme.onSurface.withValues(alpha: 0.5)),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _resetScreenTime();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: colorScheme.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('Reset'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _resetScreenTime() async {
+    final provider = context.read<TimeLimitProvider>();
+    final success = await provider.resetScreenTime(
+      parentId: widget.parentId,
+      childId: widget.child.id,
+    );
+
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Text('Reset Limit ของ ${widget.child.name} แล้ว'),
+              ],
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: const Color(0xFF10B981),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('เกิดข้อผิดพลาด กรุณาลองใหม่'),
+            backgroundColor: Colors.red.shade400,
+          ),
+        );
+      }
+    }
+  }
+}
+
+class _TimePickerModal extends StatefulWidget {
+  final ChildModel child;
+  final String parentId;
+
+  const _TimePickerModal({required this.child, required this.parentId});
+
+  @override
+  State<_TimePickerModal> createState() => _TimePickerModalState();
+}
+
+class _TimePickerModalState extends State<_TimePickerModal> {
+  int _selectedHours = 0;
+  int _selectedMinutes = 0;
+  FixedExtentScrollController? _hoursController;
+  FixedExtentScrollController? _minutesController;
+
+  @override
+  void initState() {
+    super.initState();
+    final totalSeconds = widget.child.dailyTimeLimit;
+    _selectedHours = totalSeconds ~/ 3600;
+    _selectedMinutes = (totalSeconds % 3600) ~/ 60;
+    _hoursController = FixedExtentScrollController(initialItem: _selectedHours);
+    _minutesController = FixedExtentScrollController(
+      initialItem: _selectedMinutes ~/ 5,
+    );
+  }
+
+  @override
+  void dispose() {
+    _hoursController?.dispose();
+    _minutesController?.dispose();
+    super.dispose();
+  }
+
+  int get _totalSeconds => (_selectedHours * 3600) + (_selectedMinutes * 60);
+
+  @override
+  Widget build(BuildContext context) {
+    final r = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(r.radius(28))),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: r.hp(12)),
+            width: r.wp(40),
+            height: r.hp(4),
+            decoration: BoxDecoration(
+              color: colorScheme.outline.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(r.radius(2)),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(r.wp(24), r.hp(24), r.wp(24), r.hp(8)),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(r.wp(2)),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [colorScheme.primary, colorScheme.secondary],
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    radius: r.wp(22),
+                    backgroundColor: Colors.white,
+                    backgroundImage: widget.child.avatar != null
+                        ? AssetImage(widget.child.avatar!)
+                        : null,
+                    child: widget.child.avatar == null
+                        ? Text(
+                            widget.child.name[0].toUpperCase(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: r.sp(18),
+                              color: colorScheme.primary,
+                            ),
+                          )
+                        : null,
+                  ),
+                ),
+                SizedBox(width: r.wp(14)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.child.name,
+                      style: TextStyle(
+                        fontSize: r.sp(18),
+                        fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    SizedBox(height: r.hp(2)),
+                    Text(
+                      'ตั้งค่าเวลาจำกัดรายวัน',
+                      style: TextStyle(
+                        fontSize: r.sp(14),
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          _buildWHOGuidelinesCard(),
+          SizedBox(height: r.hp(16)),
+
+          // Time Picker
+          Container(
+            height: r.hp(200),
+            margin: EdgeInsets.symmetric(horizontal: r.wp(24)),
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: BorderRadius.circular(r.radius(20)),
+            ),
+            child: Stack(
+              children: [
+                Center(
+                  child: Container(
+                    height: r.hp(48),
+                    margin: EdgeInsets.symmetric(horizontal: r.wp(20)),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface,
+                      borderRadius: BorderRadius.circular(r.radius(14)),
+                      border: Border.all(
+                        color: colorScheme.primary.withValues(alpha: 0.2),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colorScheme.primary.withValues(alpha: 0.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: r.wp(20)),
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: _hoursController,
+                        itemExtent: r.hp(48),
+                        diameterRatio: 1.5,
+                        squeeze: 1,
+                        selectionOverlay: const SizedBox(),
+                        onSelectedItemChanged: (index) {
+                          setState(() => _selectedHours = index);
+                        },
+                        children: List.generate(13, (index) {
+                          return Center(
+                            child: Text(
+                              index.toString().padLeft(2, '0'),
+                              style: TextStyle(
+                                fontSize: r.sp(32),
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    Text(
+                      'hr',
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withValues(alpha: 0.4),
+                        fontSize: r.sp(18),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Expanded(
+                      child: CupertinoPicker(
+                        scrollController: _minutesController,
+                        itemExtent: r.hp(48),
+                        diameterRatio: 1.5,
+                        squeeze: 1,
+                        selectionOverlay: const SizedBox(),
+                        onSelectedItemChanged: (index) {
+                          setState(() => _selectedMinutes = index * 5);
+                        },
+                        children: List.generate(12, (index) {
+                          return Center(
+                            child: Text(
+                              (index * 5).toString().padLeft(2, '0'),
+                              style: TextStyle(
+                                fontSize: r.sp(32),
+                                fontWeight: FontWeight.w600,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                    Text(
+                      'min',
+                      style: TextStyle(
+                        color: colorScheme.onSurface.withValues(alpha: 0.4),
+                        fontSize: r.sp(18),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(width: r.wp(20)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: r.hp(20)),
+
+          // Preset chips
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: r.wp(24)),
+            child: Row(
+              children: [
+                _buildPresetChip('30m', 0, 30),
+                SizedBox(width: r.wp(8)),
+                _buildPresetChip('1h', 1, 0),
+                SizedBox(width: r.wp(8)),
+                _buildPresetChip('2h', 2, 0),
+                SizedBox(width: r.wp(8)),
+                _buildPresetChip('∞', 0, 0),
+              ],
+            ),
+          ),
+          SizedBox(height: r.hp(24)),
+
+          // Action buttons
+          Padding(
+            padding: EdgeInsets.fromLTRB(r.wp(24), 0, r.wp(24), r.hp(24)),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: r.hp(16)),
+                      decoration: BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(r.radius(14)),
+                        border: Border.all(
+                          color: colorScheme.outline.withValues(alpha: 0.15),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          'ยกเลิก',
+                          style: TextStyle(
+                            fontSize: r.sp(16),
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: r.wp(12)),
+                Expanded(
+                  flex: 2,
+                  child: GestureDetector(
+                    onTap: _saveAndClose,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: r.hp(16)),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [colorScheme.primary, colorScheme.secondary],
+                        ),
+                        borderRadius: BorderRadius.circular(r.radius(14)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: colorScheme.primary.withValues(alpha: 0.3),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          'บันทึก',
+                          style: TextStyle(
+                            fontSize: r.sp(16),
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).padding.bottom),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPresetChip(String label, int hours, int minutes) {
+    final isSelected = _selectedHours == hours && _selectedMinutes == minutes;
+    final r = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedHours = hours;
+            _selectedMinutes = minutes;
+          });
+          _hoursController?.animateToItem(
+            hours,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+          );
+          _minutesController?.animateToItem(
+            minutes ~/ 5,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOutCubic,
+          );
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(vertical: r.hp(12)),
+          decoration: BoxDecoration(
+            gradient: isSelected
+                ? LinearGradient(
+                    colors: [colorScheme.primary, colorScheme.secondary],
+                  )
+                : null,
+            color: isSelected ? null : colorScheme.surface,
+            borderRadius: BorderRadius.circular(r.radius(12)),
+            border: Border.all(
+              color: isSelected
+                  ? Colors.transparent
+                  : colorScheme.outline.withValues(alpha: 0.12),
+            ),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: colorScheme.primary.withValues(alpha: 0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: r.sp(14),
+                fontWeight: FontWeight.w600,
+                color: isSelected
+                    ? Colors.white
+                    : colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWHOGuidelinesCard() {
+    final age = widget.child.age;
+    final recommendation = WHOGuidelines.getRecommendation(age);
+    final color = WHOGuidelines.getColor(age);
+    final gradientColors = WHOGuidelines.getGradientColors(age);
+    final currentMinutes = (_selectedHours * 60) + _selectedMinutes;
+    final isExceeding =
+        currentMinutes > 0 &&
+        WHOGuidelines.isExceedingRecommendation(age, currentMinutes);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isExceeding
+                ? [
+                    const Color(0xFFF59E0B).withValues(alpha: 0.18),
+                    const Color(0xFFFBBF24).withValues(alpha: 0.08),
+                  ]
+                : gradientColors,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isExceeding
+                ? const Color(0xFFF59E0B).withValues(alpha: 0.4)
+                : color.withValues(alpha: 0.25),
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(Icons.public_rounded, color: color, size: 18),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'คำแนะนำองค์การอนามัยโลก',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: color,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      Text(
+                        'สำหรับเด็กอายุ ${recommendation.ageGroup}',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: colorScheme.onSurface.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'WHO',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: color,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Recommendation
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.7),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    recommendation.maxMinutes == 0
+                        ? Icons.block_rounded
+                        : Icons.timer_outlined,
+                    color: color,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          recommendation.recommendation,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          recommendation.details,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: colorScheme.onSurface.withValues(alpha: 0.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Warning if exceeding
+            if (isExceeding) ...[
+              const SizedBox(height: 10),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF59E0B).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(
+                      Icons.warning_amber_rounded,
+                      color: Color(0xFFF59E0B),
+                      size: 16,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'เวลาที่ตั้งเกินคำแนะนำ WHO',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.orange.shade800,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveAndClose() async {
+    final provider = context.read<TimeLimitProvider>();
+    final success = await provider.saveTimeLimit(
+      parentId: widget.parentId,
+      childId: widget.child.id,
+      totalSeconds: _totalSeconds,
+    );
+
+    if (mounted) {
+      Navigator.pop(context);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  _totalSeconds == 0
+                      ? '${widget.child.name} set to unlimited'
+                      : 'บันทึกเวลาของ ${widget.child.name} แล้ว',
+                ),
+              ],
+            ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: const Color(0xFF10B981),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
+      }
+    }
+  }
+}

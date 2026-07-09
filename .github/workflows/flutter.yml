@@ -1,0 +1,163 @@
+# ==================== KID Guard — Flutter CI/CD Pipeline ====================
+#
+# Workflow นี้ทำงานอัตโนมัติทุกครั้งที่:
+#   - Push code ขึ้น branch: main, develop
+#   - เปิด Pull Request เข้า main, develop
+#
+# Jobs:
+#   1. analyze  — ตรวจคุณภาพโค้ด (flutter analyze + dart format)
+#   2. test     — รัน Unit Tests ทั้งหมด (ต้องผ่าน analyze ก่อน)
+#   3. build    — Build APK เพื่อยืนยันว่า compile ได้ (ต้องผ่าน test ก่อน)
+#
+# Badge แสดงบน GitHub README:
+#   [![CI](https://github.com/YOUR_USERNAME/KID_Guard_App/actions/workflows/flutter.yml/badge.svg)](...)
+
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+# ป้องกันการรัน workflow ซ้ำซ้อนเมื่อมีการ push หลายครั้งติดกัน
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FLUTTER_VERSION: "3.44.4"   # ตรงกับ Flutter version ที่ใช้ใน local
+  JAVA_VERSION: "17"          # Java 17 สำหรับ Android build
+
+jobs:
+  # ============================================================
+  # JOB 1: Code Quality — flutter analyze + format check
+  # ============================================================
+  analyze:
+    name: "🔍 Code Analysis"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      # 1. Checkout source code
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. ติดตั้ง Flutter SDK (ใช้ cache เพื่อความเร็ว)
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-key: flutter-${{ env.FLUTTER_VERSION }}-${{ runner.os }}
+
+      # 3. ดึง dependencies
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # 4. ตรวจสอบ code formatting (dart format --output=none --set-exit-if-changed)
+      #    ถ้าโค้ดไม่ได้ถูก format จะ fail
+      - name: 🎨 Check dart format
+        run: dart format --output=none --set-exit-if-changed lib/ test/
+
+      # 5. รัน Flutter Analyzer (ตรวจ warnings, errors, lint)
+      - name: 🔎 Run flutter analyze
+        run: flutter analyze --no-fatal-infos
+
+  # ============================================================
+  # JOB 2: Unit Tests — รัน tests ทั้งหมดพร้อม Coverage Report
+  # ============================================================
+  test:
+    name: "🧪 Unit Tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: analyze    # รอให้ analyze ผ่านก่อน
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-key: flutter-${{ env.FLUTTER_VERSION }}-${{ runner.os }}
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # รัน tests พร้อม coverage report
+      - name: 🧪 Run unit tests
+        run: flutter test --coverage --reporter=github
+
+      # อัปโหลด Coverage Report ไปแสดงใน GitHub Actions Summary
+      - name: 📊 Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()   # อัปโหลดแม้ test จะ fail (เพื่อ debug)
+        with:
+          name: coverage-report
+          path: coverage/lcov.info
+          retention-days: 7
+
+  # ============================================================
+  # JOB 3: Build APK — ยืนยันว่า compile ได้จริง (debug build)
+  #         รันเฉพาะตอน push เข้า main (ไม่รันทุก PR เพื่อประหยัดเวลา)
+  # ============================================================
+  build:
+    name: "🏗️ Build APK (Debug)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: test       # รอให้ tests ผ่านก่อน
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      # ติดตั้ง Java สำหรับ Android build
+      - name: ☕ Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+          cache-key: flutter-${{ env.FLUTTER_VERSION }}-${{ runner.os }}
+
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # Build APK แบบ release พร้อม Code Obfuscation
+      # --obfuscate           → ทำให้ชื่อ class/method อ่านไม่ออก (ป้องกัน reverse engineering)
+      # --split-debug-info    → แยก debug symbols ออกมาเก็บแยก (ต้องใช้ symbolicate crash)
+      - name: 🏗️ Build release APK (obfuscated)
+        run: |
+          flutter build apk --release \
+            --obfuscate \
+            --split-debug-info=build/debug-info \
+            --no-tree-shake-icons
+
+      # อัปโหลด APK เป็น Artifact (download ได้ใน GitHub Actions UI)
+      - name: 📱 Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kidguard-release-apk-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 14   # เก็บไว้ 14 วัน
+
+      # อัปโหลด Debug Symbols (จำเป็นสำหรับ symbolicate crash reports)
+      - name: 🐛 Upload debug symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: kidguard-debug-symbols-${{ github.sha }}
+          path: build/debug-info/
+          retention-days: 30   # เก็บ symbols ไว้นานกว่า APK

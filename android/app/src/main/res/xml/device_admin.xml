@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Device Admin policies สำหรับ KidGuard -->
+<!-- force-lock เป็น policy ขั้นต่ำที่ต้องมีเพื่อให้ Device Admin ทำงาน -->
+<device-admin xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-policies>
+        <force-lock />
+    </uses-policies>
+</device-admin>

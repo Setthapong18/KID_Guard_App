@@ -1,0 +1,300 @@
+{
+  "@@locale": "en",
+  "appTitle": "Kid Guard",
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+  "myChildren": "My Children",
+  "addChild": "Add Child",
+  "seeAll": "See All",
+  "quickActions": "Quick Actions",
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "settings": "Settings",
+  "language": "Language",
+  "appearance": "Appearance",
+  "appearanceSubtitle": "Theme & colors",
+  "connection": "Connection",
+  "general": "General",
+  "support": "Support",
+  "account": "Account",
+  "helpCenter": "Help Center",
+  "sendFeedback": "Send Feedback",
+  "about": "About",
+  "signOut": "Sign Out",
+  "points": "Points",
+  "quickAdd": "Quick Add",
+  "redeemRewards": "Redeem Rewards",
+  "pointHistory": "Point History",
+  "noActivity": "No activity today",
+  "homework": "Homework",
+  "chores": "Chores",
+  "goodBehavior": "Good Behavior",
+  "exercise": "Exercise",
+  "iceCream": "Ice Cream",
+  "gameTime": "Game Time",
+  "movie": "Movie",
+  "newToy": "New Toy",
+  "stayUp": "Stay Up Late",
+  "parkTrip": "Park Trip",
+  "needMorePoints": "Need {amount} more points",
+  "@needMorePoints": {
+    "placeholders": {
+      "amount": {}
+    }
+  },
+  "redeem": "Redeem",
+  "cancel": "Cancel",
+  "redeemConfirm": "Redeem {reward}?",
+  "@redeemConfirm": {
+    "placeholders": {
+      "reward": {}
+    }
+  },
+  "redeemCost": "Use {cost} points",
+  "@redeemCost": {
+    "placeholders": {
+      "cost": {}
+    }
+  },
+  "redeemNow": "Redeem Now",
+  "success": "Success!",
+  "earnedReward": "{child} earned {reward}",
+  "@earnedReward": {
+    "placeholders": {
+      "child": {},
+      "reward": {}
+    }
+  },
+  "close": "Close",
+  "pointsEarned": "+{amount} points for {reason}",
+  "@pointsEarned": {
+    "placeholders": {
+      "amount": {},
+      "reason": {}
+    }
+  },
+  "redeemed": "Redeemed: {reward}",
+  "@redeemed": {
+    "placeholders": {
+      "reward": {}
+    }
+  },
+  "editChildProfile": "Edit Child Profile",
+  "addChildProfile": "Add Child Profile",
+  "updateProfileDesc": "Update your child's profile settings.",
+  "createProfileDesc": "Create a profile for your child to manage their device usage.",
+  "childName": "Child's Name",
+  "childAge": "Age",
+  "dailyTimeLimit": "Daily Time Limit",
+  "unlimited": "Unlimited",
+  "hours": "hours",
+  "selectMode": "Select Mode",
+  "strictMode": "Strict Mode",
+  "strictModeDesc": "Block all apps except allowed ones.",
+  "flexibleMode": "Flexible Mode",
+  "flexibleModeDesc": "Allow all apps except blocked ones.",
+  "saveChanges": "Save Changes",
+  "createProfile": "Create Profile",
+  "fillAllFields": "Please fill in all fields",
+  "enterValidAge": "Please enter a valid age",
+  "profileUpdated": "Profile updated successfully!",
+  "profileCreated": "Profile for {name} created successfully!",
+  "@profileCreated": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "errorSavingProfile": "Error saving profile: {error}",
+  "@errorSavingProfile": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "accountProfile": "My Account",
+  "displayName": "Display Name",
+  "displayNameDesc": "Name to be displayed in app",
+  "email": "Email",
+  "cannotBeChanged": "Cannot be changed",
+  "verified": "Verified",
+  "password": "Password",
+  "changePasswordDesc": "Change your password",
+  "change": "Change",
+  "currentPassword": "Current Password",
+  "newPassword": "New Password",
+  "confirmNewPassword": "Confirm New Password",
+  "save": "Save",
+  "notSet": "Not set",
+  "enterDisplayName": "Please enter display name",
+  "nameLengthError": "Name must be at least 2 characters",
+  "displayNameChanged": "Your display name has been changed to \"{name}\".",
+  "@displayNameChanged": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "updateSuccess": "Update successful",
+  "updateError": "An error occurred, please try again",
+  "enterCurrentPassword": "Please enter current password",
+  "passwordLengthError": "New password must be at least 6 characters",
+  "passwordMismatchError": "Passwords do not match",
+  "securityAlert": "Security Alert",
+  "passwordChangedSuccess": "Your password was changed successfully.",
+  "passwordChangeSuccessMsg": "Password changed successfully",
+  "currentPasswordIncorrect": "Current password incorrect",
+  "parentAccount": "Parent Account",
+  "edit": "Edit",
+  "childAddedTitle": "Child Added",
+  "childAddedMessage": "{name} has been added to your family.",
+  "@childAddedMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "profileUpdatedTitle": "Profile Updated",
+  "profileUpdatedMessage": "{name}'s profile has been updated.",
+  "@profileUpdatedMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "online": "Online",
+  "offline": "Offline",
+  "noNotifications": "No notifications yet",
+  "notificationDismissed": "Notification dismissed",
+  "markAllRead": "Mark all read",
+  "justNow": "Just now",
+  "themeChangedTitle": "Theme Changed",
+  "themeChangedMessage": "App theme has been updated to {theme}.",
+  "@themeChangedMessage": {
+    "placeholders": {
+      "theme": {}
+    }
+  },
+  "languageChangedTitle": "Language Changed",
+  "languageChangedMessage": "App language has been updated to {language}.",
+  "@languageChangedMessage": {
+    "placeholders": {
+      "language": {}
+    }
+  },
+  "settingsUpdatedTitle": "Settings Updated",
+  "settingsUpdatedMessage": "Your preferences have been saved.",
+  "feedbackSentTitle": "Feedback Sent",
+  "feedbackSentMessage": "Thank you for your feedback!",
+  "customRewards": "Custom Rewards",
+  "addReward": "Add Reward",
+  "editReward": "Edit Reward",
+  "deleteReward": "Delete Reward",
+  "rewardName": "Reward Name",
+  "rewardCost": "Points Required",
+  "selectIcon": "Select Icon",
+  "rewardAdded": "Reward added!",
+  "rewardUpdated": "Reward updated!",
+  "rewardDeleted": "Reward deleted",
+  "deleteRewardConfirm": "Delete this reward?",
+  "noRewardsYet": "No custom rewards yet. Tap + to add one!",
+  "enterRewardName": "Please enter reward name",
+  "enterValidCost": "Please enter valid points",
+  "defaultRewards": "Default Rewards",
+  "myRewards": "My Rewards",
+  "homeTab": "Home",
+  "activityTab": "Activity",
+  "settingsTab": "Settings",
+  "manageAlerts": "Manage alerts",
+  "howToUse": "How to use",
+  "viewTutorialAgain": "View Tutorial again",
+  "faqAndGuides": "FAQ & guides",
+  "reportIssues": "Report issues",
+  "appInformation": "App information",
+  "connectionPin": "Connection PIN",
+  "linkChildDevicesDesc": "Use this to link child devices",
+  "copyPin": "Copy PIN",
+  "pinCopied": "PIN copied to clipboard",
+  "logOutOfYourAccount": "Log out of your account",
+  "activityTitle": "Activity",
+  "activitySubtitle": "Screen time & app usage insights",
+  "thisWeek": "This Week",
+  "weeklyOverview": "Weekly Overview",
+  "appUsed": "{count} apps used",
+  "@appUsed": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "noAppUsageData": "No app usage data",
+  "noAppUsageDataDesc": "App usage will appear after the child\nuses their device on this day",
+  "showLess": "Show less",
+  "showMore": "Show {count} more",
+  "@showMore": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "mostUsed": "Most Used",
+  "todayLabel": "Today",
+  "noChildrenAddedYet": "No children added yet",
+  "addChildToSeeActivityData": "Add a child to see activity data",
+  "errorLoadingData": "Error loading data",
+  "unlockRequestSent": "Unlock request sent",
+  "failedToSendUnlockRequest": "Failed to send unlock request: {error}",
+  "@failedToSendUnlockRequest": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "timeLimit": "Time Limit",
+  "setLimits": "Set limits",
+  "appBlock": "App Block",
+  "manage": "Manage",
+  "location": "Location",
+  "track": "Track",
+  "schedule": "Schedule",
+  "plan": "Plan",
+  "instantPause": "Instant Pause",
+  "rewards": "Rewards",
+  "appControl": "App Control",
+  "appControlWithChild": "App Control - {name}",
+  "@appControlWithChild": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "searchApps": "Search apps...",
+  "totalApps": "Total Apps",
+  "blocked": "Blocked",
+  "allowed": "Allowed",
+  "faq1Question": "How to connect a child device?",
+  "faq1Answer": "1. Open the app on your child's device and select \"Child\".\n2. Enter the 6-digit PIN from the Parent Settings page.\n3. Select or create a child profile.\n4. Turn on Child Mode.",
+  "faq2Question": "Why can blocked apps still be opened?",
+  "faq2Answer": "Please ensure that:\n• Accessibility Service is enabled.\n• Child Mode is turned on.\n• Kid Guard app is running in the background.\n\nIf it still doesn't work, try force stopping Kid Guard and opening it again.",
+  "faq3Question": "How to set a time limit?",
+  "faq3Answer": "1. Go to Dashboard > Time Limit.\n2. Select a child profile.\n3. Set your desired time limits.\n4. Save changes.\n\nThe child's screen will be locked when the limit is reached.",
+  "faq4Question": "How to view child's location?",
+  "faq4Answer": "1. Go to Dashboard > Location.\n2. Select a child profile.\n3. The location will be displayed on the map.\n\nNote: Location Permission must be enabled on the child's device.",
+  "faq5Question": "What to do if I lost my PIN?",
+  "faq5Answer": "1. Go to Settings > Connection.\n2. Tap \"Regenerate\" to create a new PIN.\n3. Use the new PIN to connect.\n\nNote: Already connected devices do not need the new PIN.",
+  "faq6Question": "How to delete a child profile?",
+  "faq6Answer": "1. Open the app on the child's device.\n2. Select \"Connect with Parent\".\n3. Press and hold the profile you want to delete.\n4. Confirm deletion.",
+  "faq7Question": "How does the Rewards system work?",
+  "faq7Answer": "You can award points to your child for tasks like homework or chores. They can use these points to redeem custom rewards (e.g., extra game time) from the Rewards section.",
+  "helpCenterTitle": "Help Center",
+  "helpCenterSubtitle": "Frequently asked questions and guides",
+  "faqTitle": "Frequently Asked Questions",
+  "contactSupportTitle": "Still have questions?",
+  "contactSupportSubtitle": "Contact us at support@kidguard.app",
+  "security": "Security",
+  "appProtection": "App Protection",
+  "appProtectionDesc": "Prevent app uninstallation",
+  "appProtectionEnabled": "Protected",
+  "appProtectionDisabled": "Not protected",
+  "enableAppProtection": "Enable Protection",
+  "enableAppProtectionDesc": "Activate to prevent children from uninstalling KidGuard",
+  "disableAppProtection": "Disable Protection",
+  "enterPinToDisable": "Enter parent PIN to disable protection",
+  "incorrectPin": "Incorrect PIN",
+  "appProtectionActivated": "App protection activated",
+  "appProtectionDeactivated": "App protection deactivated",
+  "confirm": "Confirm",
+  "enterPin": "Enter PIN"
+}

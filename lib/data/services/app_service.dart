@@ -1,0 +1,435 @@
+// ==================== นำเข้า Packages ====================
+// ignore_for_file: avoid_catches_without_on_clauses
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:device_apps/device_apps.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/app_info_model.dart';
+import '../models/notification_model.dart';
+import 'notification_service.dart';
+import 'device_service.dart';
+import 'package:flutter/material.dart';
+
+// ==================== Top-Level Isolate Function ====================
+/// ฟังก์ชัน top-level (ไม่ใช่ method ใน class) สำหรับ compute()
+/// compute() ต้องการ top-level หรือ static function เพื่อส่งไปรันใน Isolate ใหม่
+/// [_] = ไม่ใช้ parameter แต่ compute() ต้องการ argument อยู่ดี
+Future<List<AppInfoModel>> _processAppsInBackground(List<Map<String, dynamic>> rawApps) async {
+  try {
+    final List<AppInfoModel> filteredApps = [];
+    for (final app in rawApps) {
+      final appName = (app['appName'] as String).trim();
+      if (appName.isNotEmpty) {
+        String? iconBase64;
+        final iconData = app['icon'] as Uint8List?;
+        if (iconData != null) {
+          // base64 encoding เป็น CPU-heavy — ทำใน Isolate จึงไม่ block UI
+          iconBase64 = base64Encode(iconData);
+        }
+        filteredApps.add(
+          AppInfoModel(
+            packageName: app['packageName'] as String,
+            name: appName,
+            isSystemApp: app['isSystemApp'] as bool,
+            iconBase64: iconBase64,
+          ),
+        );
+      }
+    }
+    return filteredApps;
+  } catch (e) {
+    return [];
+  }
+}
+
+// ==================== AppService ====================
+/// บริการจัดการแอพที่ติดตั้งในเครื่อง
+///
+/// ฟังก์ชันหลัก:
+/// - fetchInstalledApps() - ดึงรายการแอพทั้งหมดในเครื่อง
+/// - syncAppsForDevice() - sync รายการแอพไปยัง Firestore
+/// - streamApps() - stream แอพจาก Firestore (ตามอุปกรณ์)
+/// - streamAllDevicesApps() - รวมแอพจากทุกอุปกรณ์
+/// - toggleAppLock() - ล็อก/ปลดล็อกแอพ
+///
+/// โครงสร้าง Firestore:
+/// /users/{parentUid}/children/{childId}/devices/{deviceId}/apps/{appId}
+class AppService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final DeviceService _deviceService = DeviceService();
+  static const platform = MethodChannel('com.kidguard/native');
+
+  // ==================== ดึงรายการแอพ ====================
+  /// ดึงรายการแอพที่ติดตั้งในเครื่อง
+  /// ใช้ compute() เพื่อรันใน Background Isolate
+  /// ทำให้ UI ไม่กระตุกระติกยังระหว่างโหลดข้อมูลแอพ
+  Future<List<AppInfoModel>> fetchInstalledApps() async {
+    // 1. เรียก DeviceApps ใน Main Isolate (Platform channels รันใน background isolate ไม่ได้)
+    final List<Application> allApps = await DeviceApps.getInstalledApplications(
+      includeAppIcons: true,
+      includeSystemApps: true,
+      onlyAppsWithLaunchIntent: true,
+    );
+
+    // 2. แปลงเป็น Map ธรรมดา เพื่อส่งข้าม Isolate ได้อย่างปลอดภัย
+    final rawApps = allApps.map((app) {
+      return {
+        'packageName': app.packageName,
+        'appName': app.appName,
+        'isSystemApp': app.systemApp,
+        'icon': app is ApplicationWithIcon ? app.icon : null,
+      };
+    }).toList();
+
+    // 3. ใช้ compute() เพื่อทำ base64 encode ใน Background Isolate
+    return compute(_processAppsInBackground, rawApps);
+  }
+
+  // ==================== Sync แอพไปยัง Firestore ====================
+  /// บันทึกรายการแอพของอุปกรณ์นี้ไปยัง Firestore
+  /// - ใช้ batch write เพื่อประสิทธิภาพ
+  /// - ไม่ overwrite isLocked เพื่อรักษาการตั้งค่าของผู้ปกครอง
+  Future<void> syncAppsForDevice(String parentUid, String childId) async {
+    try {
+      final deviceId = await _deviceService.getDeviceId();
+      final apps = await fetchInstalledApps();
+
+      final masterCollectionRef = _firestore
+          .collection('users')
+          .doc(parentUid)
+          .collection('children')
+          .doc(childId)
+          .collection('apps');
+
+      final deviceCollectionRef = _firestore
+          .collection('users')
+          .doc(parentUid)
+          .collection('children')
+          .doc(childId)
+          .collection('devices')
+          .doc(deviceId)
+          .collection('apps');
+
+      var batch = _firestore.batch();
+      int count = 0;
+
+      // 1. Get existing apps to find uninstalled ones
+      final existingAppsSnapshot = await masterCollectionRef.get();
+      final existingAppIds = existingAppsSnapshot.docs.map((d) => d.id).toSet();
+      final currentAppIds = <String>{};
+
+      for (final app in apps) {
+        final docId = app.packageName.replaceAll('.', '_');
+        currentAppIds.add(docId);
+
+        final data = {
+          'packageName': app.packageName,
+          'name': app.name,
+          'isSystemApp': app.isSystemApp,
+          'iconBase64': app.iconBase64,
+          'childId': childId,
+          'parentUid': parentUid,
+          'updatedAt': FieldValue.serverTimestamp(),
+        };
+
+        // Sync to both Master List and Device List
+        batch.set(
+          masterCollectionRef.doc(docId),
+          data,
+          SetOptions(merge: true),
+        );
+        batch.set(
+          deviceCollectionRef.doc(docId),
+          data,
+          SetOptions(merge: true),
+        );
+
+        count += 2; // Two sets per app
+        if (count >= 400) {
+          await batch.commit();
+          batch = _firestore.batch();
+          count = 0;
+        }
+      }
+
+      // 2. Delete apps that are no longer installed
+      final appsToDelete = existingAppIds.difference(currentAppIds);
+      for (final id in appsToDelete) {
+        batch.delete(masterCollectionRef.doc(id));
+        batch.delete(deviceCollectionRef.doc(id));
+        count += 2;
+        if (count >= 400) {
+          await batch.commit();
+          batch = _firestore.batch();
+          count = 0;
+        }
+      }
+
+      // Commit remaining
+      if (count > 0) {
+        await batch.commit();
+      }
+    } catch (e) {
+      if (kDebugMode) debugPrint('Error syncing apps: $e');
+    }
+  }
+
+  /// Stream apps for a specific device
+  Stream<List<AppInfoModel>> streamAppsForDevice(
+    String parentUid,
+    String childId,
+    String deviceId,
+  ) {
+    return _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('devices')
+        .doc(deviceId)
+        .collection('apps')
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            return AppInfoModel.fromMap(doc.data());
+          }).toList();
+        });
+  }
+
+  /// Stream apps from all devices (combined view)
+  Stream<List<AppInfoModel>> streamAllDevicesApps(
+    String parentUid,
+    String childId,
+  ) {
+    return _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('devices')
+        .snapshots()
+        .asyncMap((devicesSnapshot) async {
+          final Map<String, AppInfoModel> appMap = {};
+
+          for (final deviceDoc in devicesSnapshot.docs) {
+            final appsSnapshot = await deviceDoc.reference
+                .collection('apps')
+                .get();
+            for (final appDoc in appsSnapshot.docs) {
+              final app = AppInfoModel.fromMap(appDoc.data());
+              // Use packageName as key to avoid duplicates, keep the locked state
+              if (!appMap.containsKey(app.packageName)) {
+                appMap[app.packageName] = app;
+              } else if (app.isLocked) {
+                // If any device has it locked, keep it locked
+                appMap[app.packageName] = app;
+              }
+            }
+          }
+
+          return appMap.values.toList();
+        });
+  }
+
+  /// Toggle app lock for a specific device
+  Future<void> toggleAppLockForDevice(
+    String parentUid,
+    String childId,
+    String deviceId,
+    String packageName,
+    bool isLocked,
+  ) async {
+    final docId = packageName.replaceAll('.', '_');
+
+    await _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('devices')
+        .doc(deviceId)
+        .collection('apps')
+        .doc(docId)
+        .set({'isLocked': isLocked}, SetOptions(merge: true));
+  }
+
+  /// Toggle app lock for all devices (global)
+  Future<void> toggleAppLockAllDevices(
+    String parentUid,
+    String childId,
+    String packageName,
+    String appName,
+    bool isLocked,
+  ) async {
+    final docId = packageName.replaceAll('.', '_');
+
+    final devicesSnapshot = await _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('devices')
+        .get();
+
+    final batch = _firestore.batch();
+    final timestamp = FieldValue.serverTimestamp();
+
+    // 1. Update Master List (Main source of truth for Parent UI)
+    final masterAppRef = _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('apps')
+        .doc(docId);
+    batch.set(masterAppRef, {
+      'isLocked': isLocked,
+      'updatedAt': timestamp,
+    }, SetOptions(merge: true));
+
+    // 2. Update all Device Lists (Source of truth for Child Devices)
+    for (final deviceDoc in devicesSnapshot.docs) {
+      final appRef = deviceDoc.reference.collection('apps').doc(docId);
+      batch.set(appRef, {
+        'isLocked': isLocked,
+        'updatedAt': timestamp,
+      }, SetOptions(merge: true));
+    }
+
+    // 3. Force trigger on child doc for maximum reactivity
+    final childRef = _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId);
+    batch.set(childRef, {
+      'lastAppUpdate': timestamp,
+      'toggleTrigger': DateTime.now().millisecondsSinceEpoch,
+    }, SetOptions(merge: true));
+
+    await batch.commit();
+
+    // 4. Send notification for app lock change
+    try {
+      await NotificationService().addNotification(
+        parentUid,
+        NotificationModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          title: isLocked ? 'แอปถูกบล็อก' : 'ปลดบล็อกแอปแล้ว',
+          message: isLocked
+              ? 'แอป $appName ถูกจำกัดการใช้งานแล้ว'
+              : 'แอป $appName สามารถใช้งานได้ตามปกติ',
+          timestamp: DateTime.now(),
+          type: isLocked ? 'alert' : 'success',
+          category: 'app_blocked',
+          iconName: isLocked ? 'block_rounded' : 'check_circle_rounded',
+          colorValue: isLocked
+              ? Colors.red.toARGB32()
+              : Colors.green.toARGB32(),
+        ),
+      );
+    } catch (e) {
+      if (kDebugMode) debugPrint('Error sending app lock notification: $e');
+    }
+  }
+
+  /// Stream blocked apps from all devices for this child
+  /// Used by child device to get blocklist
+  Stream<List<String>> streamBlockedApps(String parentUid, String childId) {
+    // Listen directly to the Master List for immediate updates
+    return _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('apps')
+        .where('isLocked', isEqualTo: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => doc.data()['packageName'] as String?)
+              .whereType<String>()
+              .toList();
+        });
+  }
+
+  // ==================== LEGACY METHODS (for backward compatibility) ====================
+
+  /// Legacy: Sync apps without device ID (deprecated, use syncAppsForDevice)
+  @Deprecated('Use syncAppsForDevice instead')
+  Future<void> syncApps(String parentUid, String childId) async {
+    await syncAppsForDevice(parentUid, childId);
+  }
+
+  Stream<List<AppInfoModel>> streamApps(String parentUid, String childId) {
+    // Real-time stream from Master List - No manual refresh needed!
+    return _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .collection('apps')
+        .snapshots()
+        .map((snapshot) {
+          final List<AppInfoModel> apps = snapshot.docs
+              .map((doc) => AppInfoModel.fromMap(doc.data()))
+              .where(
+                (app) =>
+                    app.name.trim().isNotEmpty && app.packageName.isNotEmpty,
+              )
+              .toList();
+
+          // Sort alphabetically
+          apps.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+          );
+          return apps;
+        });
+  }
+
+  /// Legacy: Toggle app lock (deprecated)
+  @Deprecated('Use toggleAppLockForDevice or toggleAppLockAllDevices instead')
+  Future<void> toggleAppLock(
+    String parentUid,
+    String childId,
+    String packageName,
+    bool isLocked,
+  ) async {
+    // Toggle on all devices for backward compatibility
+    await toggleAppLockAllDevices(parentUid, childId, packageName, packageName, isLocked);
+  }
+
+  /// Legacy: Request sync (deprecated, use DeviceService.requestDeviceSync)
+  @Deprecated('Use DeviceService.requestDeviceSync instead')
+  Future<void> requestSync(String parentUid, String childId) async {
+    await _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .set({'syncRequested': true}, SetOptions(merge: true));
+
+    // Also request sync on all devices
+    await _deviceService.requestAllDevicesSync(parentUid, childId);
+  }
+
+  /// Legacy: Clear sync request (deprecated, use DeviceService.clearSyncRequest)
+  @Deprecated('Use DeviceService.clearSyncRequest instead')
+  Future<void> clearSyncRequest(String parentUid, String childId) async {
+    await _firestore
+        .collection('users')
+        .doc(parentUid)
+        .collection('children')
+        .doc(childId)
+        .set({'syncRequested': false}, SetOptions(merge: true));
+
+    await _deviceService.clearSyncRequest(parentUid, childId);
+  }
+
+  /// Legacy: Stream sync request (deprecated, use DeviceService.streamSyncRequest)
+  @Deprecated('Use DeviceService.streamSyncRequest instead')
+  Stream<bool> streamSyncRequest(String parentUid, String childId) {
+    return _deviceService.streamSyncRequest(parentUid, childId);
+  }
+}

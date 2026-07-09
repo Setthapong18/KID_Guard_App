@@ -1,0 +1,347 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../logic/providers/auth_provider.dart';
+import '../../data/models/child_model.dart';
+import '../../data/models/notification_model.dart';
+import '../../data/services/notification_service.dart';
+import 'package:kidguard/l10n/app_localizations.dart';
+import '../../core/utils/responsive_helper.dart';
+
+class ChildSetupScreen extends StatefulWidget {
+  final ChildModel? child;
+  const ChildSetupScreen({super.key, this.child});
+
+  @override
+  State<ChildSetupScreen> createState() => _ChildSetupScreenState();
+}
+
+class _ChildSetupScreenState extends State<ChildSetupScreen> {
+  late TextEditingController _nameController;
+  late TextEditingController _ageController;
+  int _dailyTimeLimit = 0; // in minutes
+  int _selectedAvatarIndex = 0;
+
+  final List<String> _avatars = [
+    'assets/avatars/boy_1.png',
+    'assets/avatars/girl_2.png',
+    'assets/avatars/boy_3.png',
+    'assets/avatars/boy_4.png',
+    'assets/avatars/girl_5.png',
+    'assets/avatars/girl_6.png',
+    'assets/avatars/girl_7.png',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.child?.name ?? '');
+    _ageController = TextEditingController(
+      text: widget.child?.age.toString() ?? '',
+    );
+    if (widget.child != null) {
+      _dailyTimeLimit = (widget.child!.dailyTimeLimit / 60).round();
+      // Find current avatar index
+      if (widget.child!.avatar != null) {
+        final idx = _avatars.indexOf(widget.child!.avatar!);
+        if (idx >= 0) _selectedAvatarIndex = idx;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _ageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isEditing = widget.child != null;
+    final r = ResponsiveHelper.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          isEditing
+              ? AppLocalizations.of(context)!.editChildProfile
+              : AppLocalizations.of(context)!.addChildProfile,
+          style: TextStyle(fontSize: r.sp(18)),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(r.wp(24)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              isEditing
+                  ? AppLocalizations.of(context)!.updateProfileDesc
+                  : AppLocalizations.of(context)!.createProfileDesc,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                fontSize: r.sp(14),
+              ),
+            ),
+            SizedBox(height: r.hp(24)),
+
+            // Avatar picker section
+            Text(
+              'เลือก Avatar',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: r.sp(16),
+                color: colorScheme.onSurface,
+              ),
+            ),
+            SizedBox(height: r.hp(16)),
+            SizedBox(
+              height: r.hp(100),
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _avatars.length,
+                separatorBuilder: (context, index) => SizedBox(width: r.wp(12)),
+                itemBuilder: (context, index) {
+                  final isSelected = _selectedAvatarIndex == index;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => _selectedAvatarIndex = index);
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      padding: EdgeInsets.all(r.wp(3)),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isSelected
+                              ? colorScheme.primary
+                              : Colors.transparent,
+                          width: 2.5,
+                        ),
+                        boxShadow: isSelected
+                            ? [
+                                BoxShadow(
+                                  color: colorScheme.primary.withValues(
+                                    alpha: 0.25,
+                                  ),
+                                  blurRadius: 16,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ]
+                            : null,
+                      ),
+                      child: CircleAvatar(
+                        radius: r.wp(36),
+                        backgroundColor: colorScheme.tertiary.withValues(
+                          alpha: 0.3,
+                        ),
+                        backgroundImage: AssetImage(_avatars[index]),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            SizedBox(height: r.hp(28)),
+            TextFormField(
+              controller: _nameController,
+              style: TextStyle(fontSize: r.sp(15)),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.childName,
+                labelStyle: TextStyle(fontSize: r.sp(14)),
+                prefixIcon: Icon(Icons.person_outline, size: r.iconSize(22)),
+              ),
+            ),
+            SizedBox(height: r.hp(16)),
+            TextFormField(
+              controller: _ageController,
+              style: TextStyle(fontSize: r.sp(15)),
+              decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.childAge,
+                labelStyle: TextStyle(fontSize: r.sp(14)),
+                prefixIcon: Icon(Icons.cake_outlined, size: r.iconSize(22)),
+              ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: r.hp(32)),
+            Text(
+              '${AppLocalizations.of(context)!.dailyTimeLimit}: ${_formatTimeLimit(context, _dailyTimeLimit)}',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: r.sp(16),
+              ),
+            ),
+            Slider(
+              value: _dailyTimeLimit.toDouble(),
+              max: 480,
+              divisions: 16,
+              onChanged: (value) {
+                setState(() {
+                  _dailyTimeLimit = value.toInt();
+                });
+              },
+            ),
+            SizedBox(height: r.hp(48)),
+            ElevatedButton(
+              onPressed: _saveChildProfile,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: r.hp(14)),
+              ),
+              child: Text(
+                isEditing
+                    ? AppLocalizations.of(context)!.saveChanges
+                    : AppLocalizations.of(context)!.createProfile,
+                style: TextStyle(fontSize: r.sp(15)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveChildProfile() async {
+    final name = _nameController.text.trim();
+    final ageText = _ageController.text.trim();
+
+    if (name.isEmpty || ageText.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.fillAllFields)),
+      );
+      return;
+    }
+
+    final age = int.tryParse(ageText);
+    if (age == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.enterValidAge)),
+      );
+      return;
+    }
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final user = authProvider.userModel;
+
+    if (user == null) return;
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final isEditing = widget.child != null;
+      final childId = isEditing
+          ? widget.child!.id
+          : FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .collection('children')
+                .doc()
+                .id;
+
+      final childToSave = ChildModel(
+        id: childId,
+        parentId: user.uid,
+        name: name,
+        age: age,
+        dailyTimeLimit: _dailyTimeLimit * 60, // Convert minutes to seconds
+        isLocked: isEditing && widget.child!.isLocked,
+        avatar: _avatars[_selectedAvatarIndex],
+        screenTime: isEditing ? widget.child!.screenTime : 0,
+        limitUsedTime: isEditing ? widget.child!.limitUsedTime : 0,
+        isOnline: isEditing && widget.child!.isOnline,
+        lastActive: isEditing ? widget.child!.lastActive : null,
+        sessionStartTime: isEditing ? widget.child!.sessionStartTime : null,
+        isChildModeActive: isEditing && widget.child!.isChildModeActive,
+        unlockRequested: isEditing && widget.child!.unlockRequested,
+        timeLimitDisabledUntil: isEditing
+            ? widget.child!.timeLimitDisabledUntil
+            : null,
+        lockReason: isEditing ? widget.child!.lockReason : '',
+        points: isEditing ? widget.child!.points : 0,
+      );
+
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('children')
+          .doc(childId)
+          .set(childToSave.toMap());
+
+      if (!mounted) return;
+
+      // Send Notification only on create
+      if (!isEditing) {
+        await NotificationService().addNotification(
+          user.uid,
+          NotificationModel(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            title: AppLocalizations.of(context)!.childAddedTitle,
+            message: AppLocalizations.of(context)!.childAddedMessage(name),
+            timestamp: DateTime.now(),
+            type: 'system',
+            iconName: 'person_add_rounded',
+            colorValue: Colors.green.toARGB32(),
+          ),
+        );
+      } else {
+        await NotificationService().addNotification(
+          user.uid,
+          NotificationModel(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            title: AppLocalizations.of(context)!.profileUpdatedTitle,
+            message: AppLocalizations.of(context)!.profileUpdatedMessage(name),
+            timestamp: DateTime.now(),
+            type: 'system',
+            iconName: 'edit_rounded',
+            colorValue: Colors.blue.toARGB32(),
+          ),
+        );
+      }
+
+      if (!mounted) return;
+      Navigator.pop(context); // Pop loading dialog
+      Navigator.pop(context); // Pop screen
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isEditing
+                ? AppLocalizations.of(context)!.profileUpdated
+                : AppLocalizations.of(context)!.profileCreated(name),
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      Navigator.pop(context); // Pop loading dialog
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.errorSavingProfile(e.toString()),
+          ),
+        ),
+      );
+    }
+  }
+
+  String _formatTimeLimit(BuildContext context, int totalMinutes) {
+    if (totalMinutes == 0) return AppLocalizations.of(context)!.unlimited;
+    
+    final int hours = totalMinutes ~/ 60;
+    final int minutes = totalMinutes % 60;
+    
+    if (hours > 0 && minutes > 0) {
+      return '$hours ชั่วโมง $minutes นาที';
+    } else if (hours > 0) {
+      return '$hours ชั่วโมง';
+    } else {
+      return '$minutes นาที';
+    }
+  }
+}
